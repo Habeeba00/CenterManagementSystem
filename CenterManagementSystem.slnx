@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CenterManagement.Application/CenterManagement.Application.csproj" />
+  <Project Path="CenterManagement.Domain/CenterManagement.Domain.csproj" />
+  <Project Path="CenterManagement.Infrastructure/CenterManagement.Infrastructure.csproj" />
+  <Project Path="CenterManagement.Web/CenterManagement.Web.csproj" />
+</Solution>

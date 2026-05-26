@@ -1,0 +1,12 @@
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\bin\Debug\net8.0\CenterManagement.Domain.deps.json
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\bin\Debug\net8.0\CenterManagement.Domain.dll
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\bin\Debug\net8.0\CenterManagement.Domain.pdb
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.csproj.AssemblyReference.cache
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.AssemblyInfoInputs.cache
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.AssemblyInfo.cs
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.csproj.CoreCompileInputs.cache
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.dll
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\refint\CenterManagement.Domain.dll
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.pdb
+D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\ref\CenterManagement.Domain.dll
