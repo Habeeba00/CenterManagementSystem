@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add New Student - EduManager Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chip-active {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb !important;
+            ring: 3px;
+            --tw-ring-color: rgba(37, 99, 235, 0.1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "outline": "#737686",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container-low": "#eff4ff",
+                        "secondary-container": "#d5e0f8",
+                        "primary-container": "#2563eb",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#bc4800",
+                        "outline-variant": "#c3c6d7",
+                        "on-secondary-container": "#586377",
+                        "on-primary-container": "#eeefff",
+                        "tertiary": "#943700",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-surface-variant": "#434655",
+                        "on-surface": "#0b1c30",
+                        "surface-container-high": "#dce9ff",
+                        "on-background": "#0b1c30",
+                        "inverse-surface": "#213145",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#d8e3fb",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "inverse-primary": "#b4c5ff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "secondary": "#545f73",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "on-secondary-fixed": "#111c2d",
+                        "on-tertiary-container": "#ffede6",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-tint": "#0053db",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "primary": "#004ac6",
+                        "surface-bright": "#f8f9ff",
+                        "on-primary-fixed": "#00174b",
+                        "error": "#ba1a1a",
+                        "background": "#f8f9ff",
+                        "surface-container": "#e5eeff",
+                        "surface": "#f8f9ff",
+                        "tertiary-fixed": "#ffdbcd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "stack-lg": "32px",
+                        "stack-md": "16px",
+                        "sidebar-width": "280px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-sm": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "display": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-md text-on-background min-h-screen flex items-center justify-center p-0 sm:p-4">
+<!-- Mobile Full-Screen Modal Container -->
+<div class="w-full h-screen sm:h-auto sm:max-w-md sm:rounded-xl bg-surface-container-lowest shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom duration-300">
+<!-- Header -->
+<header class="flex items-center justify-between px-margin-mobile py-4 border-b border-outline-variant bg-surface sticky top-0 z-10">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors active:scale-90 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant">close</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm text-on-surface">New Student</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Scrollable Form Content -->
+<div class="flex-1 overflow-y-auto px-margin-mobile py-stack-md space-y-stack-lg">
+<!-- Student Photo Upload Section -->
+<section class="flex flex-col items-center space-y-stack-sm">
+<div class="relative group">
+<div class="w-24 h-24 rounded-full bg-surface-container-high border-2 border-dashed border-outline-variant flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary transition-colors">
+<img class="hidden w-full h-full object-cover" data-alt="A clean, minimalist studio portrait placeholder for a student profile, featuring soft high-key lighting and a neutral grey background. The aesthetic is professional and corporate, matching a modern educational administration software interface with a bright and airy feel." id="preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXGGLczi9GX3mPzcl2JqHGPMXUUX0yjpCapxc-okHAvF_AakmgA5PkhJ0kCWOXjBqo0nbtarninw4_K9W548wnc4spkLarKJuXKeC9r1NqTs7UYE0FFmIR1n25IQSkhyZIep-h7KxPtURgw7DXs0WtJDhPWpdX0zKUjA939nfBxR0oYMYpcBpMjBpAD06D_zFkXQRFyVBBEJXKO63T0Lq2aVFBfa6OvxkdAWeN4zGsW1F5hBTI6xcrzMnU9BGARJ1AkF956UJRYFk"/>
+<span class="material-symbols-outlined text-outline text-3xl group-hover:text-primary transition-colors">add_a_photo</span>
+</div>
+<div class="absolute bottom-0 right-0 bg-primary-container p-1.5 rounded-full text-white shadow-md">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">edit</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-outline">Upload Student Photo</p>
+</section>
+<form class="space-y-stack-md">
+<!-- Personal Information Section -->
+<div class="space-y-stack-sm">
+<h2 class="font-label-md text-label-md text-primary uppercase tracking-wider">Personal Information</h2>
+<div class="space-y-4">
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="full-name">Full Name</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container transition-all" id="full-name" placeholder="Enter student's full name" required="" type="text"/>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="student-phone">Student Phone Number</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">call</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container transition-all" id="student-phone" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="parent-phone">Parent Phone Number</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">family_restroom</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container transition-all" id="parent-phone" placeholder="+1 (555) 000-0000" required="" type="tel"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Academic Details Section -->
+<div class="space-y-stack-sm pt-4">
+<h2 class="font-label-md text-label-md text-primary uppercase tracking-wider">Academic Details</h2>
+<div class="space-y-4">
+<!-- Grade Selection -->
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="grade">Grade Level</label>
+<div class="relative">
+<select class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md appearance-none focus:border-primary-container transition-all" id="grade">
+<option disabled="" selected="" value="">Select Grade</option>
+<option value="1">Grade 1</option>
+<option value="2">Grade 2</option>
+<option value="3">Grade 3</option>
+<option value="4">Grade 4</option>
+<option value="5">Grade 5</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Subject Multi-select chips -->
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant ml-1">Subjects</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-label-md transition-all bg-surface-container-high text-on-surface-variant" onclick="this.classList.toggle('chip-active'); this.classList.toggle('bg-surface-container-high');" type="button">Mathematics</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-label-md transition-all bg-surface-container-high text-on-surface-variant" onclick="this.classList.toggle('chip-active'); this.classList.toggle('bg-surface-container-high');" type="button">Science</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-label-md transition-all bg-surface-container-high text-on-surface-variant" onclick="this.classList.toggle('chip-active'); this.classList.toggle('bg-surface-container-high');" type="button">English</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-label-md transition-all bg-surface-container-high text-on-surface-variant" onclick="this.classList.toggle('chip-active'); this.classList.toggle('bg-surface-container-high');" type="button">History</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-label-md transition-all bg-surface-container-high text-on-surface-variant" onclick="this.classList.toggle('chip-active'); this.classList.toggle('bg-surface-container-high');" type="button">Art</button>
+</div>
+</div>
+<!-- Group Selection -->
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="group">Assigned Group</label>
+<div class="relative">
+<select class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md appearance-none focus:border-primary-container transition-all" id="group">
+<option disabled="" selected="" value="">Choose a Group</option>
+<option value="alpha">Alpha Morning Batch</option>
+<option value="beta">Beta Afternoon Batch</option>
+<option value="gamma">Gamma Evening Batch</option>
+<option value="weekend">Weekend Intensive</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">group</span>
+</div>
+</div>
+</div>
+</div>
+</form>
+<div class="h-8"></div> <!-- Bottom spacing -->
+</div>
+<!-- Sticky Footer Actions -->
+<footer class="p-margin-mobile bg-surface border-t border-outline-variant grid grid-cols-2 gap-4 sticky bottom-0 z-10">
+<button class="w-full py-3.5 rounded-lg border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-low transition-colors active:scale-95 duration-150">
+                Cancel
+            </button>
+<button class="w-full py-3.5 rounded-lg bg-primary-container text-white font-label-md shadow-md hover:brightness-110 transition-all active:scale-95 duration-150">
+                Save Student
+            </button>
+</footer>
+</div>
+<script>
+        // Simple Micro-interaction for form inputs
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('label')?.classList.add('text-primary');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.querySelector('label')?.classList.remove('text-primary');
+            });
+        });
+
+        // Toggle Active State for Subject Chips
+        // (Functionality is inline for this example)
+    </script>
+</body></html>

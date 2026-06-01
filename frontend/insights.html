@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#ffdad6",
+                    "on-tertiary-container": "#ffede6",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#545f73",
+                    "on-surface-variant": "#434655",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "on-secondary-fixed-variant": "#3c475a",
+                    "on-tertiary-fixed": "#360f00",
+                    "tertiary": "#943700",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-variant": "#d3e4fe",
+                    "secondary-fixed": "#d8e3fb",
+                    "on-tertiary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "surface": "#f8f9ff",
+                    "on-secondary-fixed": "#111c2d",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "tertiary-container": "#bc4800",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-surface": "#0b1c30",
+                    "surface-container-high": "#dce9ff",
+                    "background": "#f8f9ff",
+                    "surface-bright": "#f8f9ff",
+                    "primary-container": "#2563eb",
+                    "secondary-container": "#d5e0f8",
+                    "primary": "#004ac6",
+                    "outline-variant": "#c3c6d7",
+                    "on-primary-fixed": "#00174b",
+                    "on-primary-container": "#eeefff",
+                    "surface-tint": "#0053db",
+                    "tertiary-fixed": "#ffdbcd",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#586377",
+                    "surface-dim": "#cbdbf5",
+                    "surface-container": "#e5eeff",
+                    "surface-container-low": "#eff4ff",
+                    "error": "#ba1a1a",
+                    "on-background": "#0b1c30",
+                    "outline": "#737686",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#bcc7de",
+                    "primary-fixed": "#dbe1ff",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-surface": "#213145"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sidebar-width": "280px",
+                    "stack-md": "16px",
+                    "margin-mobile": "16px",
+                    "gutter": "24px",
+                    "container-max": "1440px",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px"
+            },
+            "fontFamily": {
+                    "display": ["Hanken Grotesk"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "headline-sm": ["Hanken Grotesk"],
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chart-grid {
+            background-image: radial-gradient(circle, #e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+<!-- Side Navigation Shell -->
+<aside class="bg-inverse-surface fixed left-0 top-0 h-full w-sidebar-width flex flex-col p-4 overflow-y-auto shadow-lg border-r border-outline-variant z-50 transition-all duration-200 ease-in-out">
+<div class="mb-10 px-2">
+<h1 class="text-headline-md font-headline-md font-bold text-white">EduManager Pro</h1>
+<p class="font-label-md text-label-md text-secondary-fixed-dim">Admin Console</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-white transition-colors hover:bg-white/5 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-white transition-colors hover:bg-white/5 rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">Students</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-white transition-colors hover:bg-white/5 rounded-lg" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-md text-label-md">Teachers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-white transition-colors hover:bg-white/5 rounded-lg" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-label-md text-label-md">Sessions</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-white transition-colors hover:bg-white/5 rounded-lg" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Payments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white/10 text-white rounded-lg border-l-4 border-primary shadow-sm" href="#">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-white transition-colors hover:bg-white/5 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-white/10 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-white transition-colors hover:bg-white/5 rounded-lg" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-white transition-colors hover:bg-white/5 rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="bg-surface/80 backdrop-blur-md sticky top-0 z-40 h-16 px-gutter ml-sidebar-width w-[calc(100%-sidebar-width)] flex justify-between items-center border-b border-outline-variant shadow-sm">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2 pl-10 pr-4 text-body-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Search analytics data..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="font-label-md text-label-md leading-tight text-on-surface">Alex Rivera</p>
+<p class="font-label-sm text-label-sm text-outline">Center Administrator</p>
+</div>
+<img alt="Administrator Profile" class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A professional headshot of a Hispanic male administrator in a brightly lit modern office setting. He is wearing a crisp white dress shirt and has a confident, approachable expression. The image has a shallow depth of field with soft, corporate lighting, emphasizing a clean and high-fidelity professional aesthetic consistent with a reliable enterprise management tool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIFXOLvR6W4M4pMkvagSvQ4P80YpH-SRAkzruH52B4qFvjp183ncODyete01mRwAAyyCAZXP3KzuUVBf5GyoE2K83_D_nLuMBVT3dUfbvs0OammR1xjVXOKf5sJlINOcZ8PshfAWJ_K5eq02UMQhG4qnaqBu-bVmm_hblsV6mCZfWQl1A9JwUgo6VCcxOsdYrpSGeUSOmaE2L_vWcti8wyUexlwYVp97FXVZ1fpx2SNs4ndFvIvMw-y-U98mLLYAJ1Nz-eohez4Ik"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-sidebar-width p-gutter max-w-container-max mx-auto">
+<div class="flex justify-between items-end mb-stack-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Executive Analytics</h2>
+<p class="text-on-surface-variant font-body-md mt-1">Real-time performance tracking and academic insights.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-highest text-primary px-4 py-2 rounded-lg font-label-md flex items-center gap-2 hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+                    Export PDF
+                </button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-md">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+                    Refresh Data
+                </button>
+</div>
+</div>
+<!-- KPI Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-stack-lg">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_10px_15px_-3px_rgba(30,41,59,0.05)] border border-outline-variant">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-primary-container/10 text-primary rounded-lg">
+<span class="material-symbols-outlined">group</span>
+</div>
+<span class="flex items-center text-primary font-label-sm bg-primary-container/10 px-2 py-1 rounded-full">+12.5%</span>
+</div>
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Total Students</p>
+<h3 class="font-display text-display text-on-surface mt-1">1,284</h3>
+<p class="text-on-surface-variant font-body-sm mt-2 flex items-center gap-1">
+<span class="text-primary font-bold">142</span> new enrollments this month
+                </p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_10px_15px_-3px_rgba(30,41,59,0.05)] border border-outline-variant">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-tertiary-fixed-dim/20 text-tertiary rounded-lg">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="flex items-center text-tertiary font-label-sm bg-tertiary-fixed/30 px-2 py-1 rounded-full">+8.2%</span>
+</div>
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Monthly Revenue</p>
+<h3 class="font-display text-display text-on-surface mt-1">$52,490</h3>
+<p class="text-on-surface-variant font-body-sm mt-2 flex items-center gap-1">
+<span class="text-tertiary font-bold">$4,120</span> increase from last month
+                </p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_10px_15px_-3px_rgba(30,41,59,0.05)] border border-outline-variant">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-secondary-container text-secondary rounded-lg">
+<span class="material-symbols-outlined">event_available</span>
+</div>
+<span class="flex items-center text-error font-label-sm bg-error-container px-2 py-1 rounded-full">-2.1%</span>
+</div>
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Avg. Attendance</p>
+<h3 class="font-display text-display text-on-surface mt-1">94.2%</h3>
+<p class="text-on-surface-variant font-body-sm mt-2 flex items-center gap-1">
+                    Target: <span class="text-on-surface font-bold">96%</span> for Q3
+                </p>
+</div>
+</div>
+<!-- Charts Bento Grid -->
+<div class="grid grid-cols-12 gap-gutter mb-stack-lg">
+<!-- Line Chart: Attendance Trend -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm h-[400px] flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Attendance Trend (30 Days)</h4>
+<select class="bg-surface-container-low border-outline-variant rounded-lg text-label-sm py-1 pl-2 pr-8 focus:ring-primary">
+<option>Last 30 Days</option>
+<option>Last Quarter</option>
+</select>
+</div>
+<div class="flex-1 chart-grid relative overflow-hidden rounded-lg flex items-end justify-between px-2 pt-10">
+<!-- SVG Simulation for a Line Chart -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M0 80 Q 20 60, 40 75 T 80 40 T 100 20" fill="none" stroke="#004ac6" stroke-width="2"></path>
+<path d="M0 80 Q 20 60, 40 75 T 80 40 T 100 20 L 100 100 L 0 100 Z" fill="url(#lineGradient)" opacity="0.1"></path>
+<defs>
+<lineargradient id="lineGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#004ac6"></stop>
+<stop offset="100%" stop-color="transparent"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Simulated X-axis labels -->
+<div class="absolute bottom-2 left-0 w-full flex justify-between px-4 text-outline text-[10px]">
+<span>Day 1</span><span>Day 7</span><span>Day 14</span><span>Day 21</span><span>Day 30</span>
+</div>
+</div>
+</div>
+<!-- Student Distribution Donut -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm h-[400px] flex flex-col">
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-6">Student Distribution</h4>
+<div class="flex-1 flex flex-col items-center justify-center relative">
+<!-- SVG Simulation for Donut Chart -->
+<svg class="w-48 h-48 -rotate-90">
+<circle cx="96" cy="96" fill="none" r="70" stroke="#e5eeff" stroke-width="20"></circle>
+<circle cx="96" cy="96" fill="none" r="70" stroke="#004ac6" stroke-dasharray="220 440" stroke-width="20"></circle>
+<circle cx="96" cy="96" fill="none" r="70" stroke="#943700" stroke-dasharray="100 440" stroke-dashoffset="-220" stroke-width="20"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-display text-headline-md">1,284</span>
+<span class="text-label-sm text-outline">Total</span>
+</div>
+<div class="mt-6 w-full space-y-2">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary"></div><span class="text-body-sm">Grades 1-5</span></div>
+<span class="font-label-sm text-on-surface">58%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-tertiary"></div><span class="text-body-sm">Grades 6-9</span></div>
+<span class="font-label-sm text-on-surface">32%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-outline-variant"></div><span class="text-body-sm">Others</span></div>
+<span class="font-label-sm text-on-surface">10%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Grid: Insights & Revenue & Teachers -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Smart Insights Panel -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-stack-md">
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex-1">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-tertiary">psychology</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Smart Insights</h4>
+</div>
+<div class="space-y-4">
+<div class="p-4 bg-error-container/30 border-l-4 border-error rounded-r-lg">
+<div class="flex justify-between items-start mb-1">
+<span class="font-label-md text-error">Low Attendance</span>
+<span class="text-[10px] font-label-sm text-outline uppercase tracking-tighter">Action Required</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">8 students dropped below 80% this week. Primary subject: Mathematics.</p>
+</div>
+<div class="p-4 bg-tertiary-fixed/30 border-l-4 border-tertiary rounded-r-lg">
+<div class="flex justify-between items-start mb-1">
+<span class="font-label-md text-tertiary">Overdue Payments</span>
+<span class="text-[10px] font-label-sm text-outline uppercase tracking-tighter">Financial Risk</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">12 invoices remaining unpaid for &gt;15 days. Total exposure: $2,840.</p>
+</div>
+<div class="p-4 bg-secondary-container/30 border-l-4 border-secondary rounded-r-lg">
+<div class="flex justify-between items-start mb-1">
+<span class="font-label-md text-secondary">Cancellation Trend</span>
+<span class="text-[10px] font-label-sm text-outline uppercase tracking-tighter">Efficiency</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Friday evening sessions show a 15% cancellation spike. Consider rescheduling.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Revenue Bar Chart & Teacher List Cluster -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-gutter">
+<!-- Revenue by Subject Bar Chart -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-6">Revenue by Subject</h4>
+<div class="h-48 flex items-end gap-6 px-4">
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/20 rounded-t-lg h-[85%] relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-primary h-[85%] transition-all duration-700 hover:opacity-80"></div>
+</div>
+<span class="text-[10px] font-label-sm text-outline mt-2 uppercase">Math</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/20 rounded-t-lg h-[65%] relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-primary h-[65%] transition-all duration-700 hover:opacity-80"></div>
+</div>
+<span class="text-[10px] font-label-sm text-outline mt-2 uppercase">Science</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/20 rounded-t-lg h-[45%] relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-primary h-[45%] transition-all duration-700 hover:opacity-80"></div>
+</div>
+<span class="text-[10px] font-label-sm text-outline mt-2 uppercase">English</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/20 rounded-t-lg h-[95%] relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-primary h-[95%] transition-all duration-700 hover:opacity-80"></div>
+</div>
+<span class="text-[10px] font-label-sm text-outline mt-2 uppercase">Coding</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/20 rounded-t-lg h-[30%] relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-primary h-[30%] transition-all duration-700 hover:opacity-80"></div>
+</div>
+<span class="text-[10px] font-label-sm text-outline mt-2 uppercase">Arts</span>
+</div>
+</div>
+</div>
+<!-- Top Performing Teachers -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm overflow-x-auto">
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-6">Top Performing Teachers</h4>
+<table class="w-full">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="text-left py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Teacher</th>
+<th class="text-left py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Subject</th>
+<th class="text-left py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Attendance</th>
+<th class="text-right py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Efficiency</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-4 flex items-center gap-3">
+<img alt="Teacher Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A portrait of a highly professional female educator in a minimalist educational setting. She is wearing glasses and a smart-casual blazer, exuding competence and clarity. The lighting is bright and even, creating a focused, academic atmosphere within a high-fidelity enterprise interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjV46RdBqqSkL_FBL0Rswuyn_HgYzj3pPkEy6VT-ieM9Q2MFQ1orEG6aAevAXLeGW-kw2IwIC_Ucs1o4dd6w7QR68Y_IPbXpp3lt3n3xGrf-QSkUHYtmglwKll8SoVXK5meGRo15xeibh8ss2ube8m1wlyYezBdhf3d_n1oV8ksYBSzOi1vAHlEZUfJocJoWd8OBRzhQM6Ciza_Q_oFZFbGo_JXOoXD9HbCZaA-p_2lhKGNr95udjQzgb2dz3N4fXuXjgnU1q_61g"/>
+<span class="font-label-md text-on-surface">Dr. Sarah Jenkins</span>
+</td>
+<td class="py-3 px-4 text-body-sm text-on-surface-variant">Advanced Calculus</td>
+<td class="py-3 px-4">
+<span class="bg-primary-container/20 text-primary px-2 py-0.5 rounded-full text-[12px] font-bold">98.4%</span>
+</td>
+<td class="py-3 px-4 text-right font-body-sm font-mono text-on-surface">9.4/10</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-4 flex items-center gap-3">
+<img alt="Teacher Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A close-up of a male teacher smiling warmly, positioned in a modern classroom background that is slightly blurred. He represents a dedicated and successful staff member. The image uses soft, natural window lighting and a professional corporate color palette, reflecting reliability and educational success." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTcm0mFnhnK8Hy6WyajCGz-58t_0XgVnv4IoglXkZDDPSeb8_P9ei1rG_ZHaAfxPt3Ww8cPSXoDsN-pXNeBLx7ZSXdO4WILrvVh6WDKKnRFyVzcnMud80XWNUKTK2LlXgKawi1J17U1PEtigREQvdk99G3vZBK4uidcTGtoCrzdCLfe2IqdJwG3CIpc23Xnzmi4706MSY77rB328goqCB-6NyxCtvkYpfGyZVoqRZ-S0yaNh5I-dcnc7Ju3fBluaFq7NkWAYsH_8U"/>
+<span class="font-label-md text-on-surface">Marcus Thorne</span>
+</td>
+<td class="py-3 px-4 text-body-sm text-on-surface-variant">Full Stack Coding</td>
+<td class="py-3 px-4">
+<span class="bg-primary-container/20 text-primary px-2 py-0.5 rounded-full text-[12px] font-bold">96.1%</span>
+</td>
+<td class="py-3 px-4 text-right font-body-sm font-mono text-on-surface">9.1/10</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-4 flex items-center gap-3">
+<img alt="Teacher Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="Portrait of a young, innovative female teacher in a bright, tech-oriented workshop environment. She has an enthusiastic expression. The visual style is clean and high-key, using soft primary blue accents and sharp focus to highlight professionalism in an educational enterprise context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCak9pWzsyRj6zDKV7TZjOThS50Hxd7TlyUNIYpa1qfzth44l5Qwqt1REBLvjuRKFVSyUzB_Hpo9oVpYIWjHXW7dlDJsaWCfq0EpalDmmy98vJmM9dNUIXFeH_os0cQguNjHeNAHTCVgHOzEONB0MnoiGMmlTpa87yV75t0TK4lmRO3qRDLz9A7pb5tzVvCojVzLW9og09faKyMLmkh1NdB8dOPFL8zQWj4wHqIbxdPbUUdzS5II0jCyofRco1ml3p9CXPjJZuA_AQ"/>
+<span class="font-label-md text-on-surface">Elena Rodriguez</span>
+</td>
+<td class="py-3 px-4 text-body-sm text-on-surface-variant">Data Science Jr.</td>
+<td class="py-3 px-4">
+<span class="bg-primary-container/20 text-primary px-2 py-0.5 rounded-full text-[12px] font-bold">95.8%</span>
+</td>
+<td class="py-3 px-4 text-right font-body-sm font-mono text-on-surface">8.9/10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Micro-interactions and interactive effects
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => el.classList.add('scale-95'));
+            el.addEventListener('mouseup', () => el.classList.remove('scale-95'));
+            el.addEventListener('mouseleave', () => el.classList.remove('scale-95'));
+        });
+
+        // Simple animation on load for stat cards
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.bg-surface-container-lowest');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `all 0.5s ease-out ${index * 0.1}s`;
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+    </script>
+</body></html>
