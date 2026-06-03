@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,14 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CenterManagement.Domain\CenterManagement.Domain.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Interfaces\" />
+    <ProjectReference Include="..\CenterManagement.Domain\CenterManagement.Domain.csproj" />
+    <ProjectReference Include="..\CenterManagement.Infrastructure\CenterManagement.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Validators\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

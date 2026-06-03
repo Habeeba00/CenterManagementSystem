@@ -1,0 +1,60 @@
+@model CenterManagement.Web.ViewModels.Auth.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_LayoutEmpty";
+}
+
+<div class="min-h-screen bg-background flex items-center justify-center px-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-auto p-8">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <h1 class="text-headline-md font-headline-md font-bold text-primary tracking-tight">EduManager Pro</h1>
+            <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Sign in to your account</p>
+        </div>
+
+        <!-- Validation Summary -->
+        <div asp-validation-summary="All" class="text-error text-body-sm mb-4"></div>
+
+        <form asp-action="Login" asp-controller="Auth" method="post" class="space-y-5">
+            @Html.AntiForgeryToken()
+
+            <!-- Email -->
+            <div>
+                <label asp-for="Email" class="block font-label-md text-label-md text-on-surface mb-1.5">Email</label>
+                <input asp-for="Email"
+                       type="email"
+                       placeholder="admin@center.com"
+                       class="w-full px-4 py-3 border border-outline-variant rounded-lg bg-surface-container-lowest text-on-surface font-body-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" />
+                <span asp-validation-for="Email" class="text-error text-label-sm mt-1 block"></span>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label asp-for="Password" class="block font-label-md text-label-md text-on-surface mb-1.5">Password</label>
+                <input asp-for="Password"
+                       type="password"
+                       placeholder="••••••••"
+                       class="w-full px-4 py-3 border border-outline-variant rounded-lg bg-surface-container-lowest text-on-surface font-body-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" />
+                <span asp-validation-for="Password" class="text-error text-label-sm mt-1 block"></span>
+            </div>
+
+            <!-- Remember Me -->
+            <div class="flex items-center gap-2">
+                <input asp-for="RememberMe"
+                       type="checkbox"
+                       class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" />
+                <label asp-for="RememberMe" class="font-body-sm text-body-sm text-on-surface-variant cursor-pointer">Remember me</label>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit"
+                    class="bg-primary-container text-white w-full py-3.5 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-[0.98] transition-all shadow-md">
+                Sign In
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

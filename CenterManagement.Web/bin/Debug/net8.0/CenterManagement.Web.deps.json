@@ -864,7 +864,8 @@
       },
       "CenterManagement.Application/1.0.0": {
         "dependencies": {
-          "CenterManagement.Domain": "1.0.0"
+          "CenterManagement.Domain": "1.0.0",
+          "CenterManagement.Infrastructure": "1.0.0"
         },
         "runtime": {
           "CenterManagement.Application.dll": {
@@ -886,7 +887,6 @@
       },
       "CenterManagement.Infrastructure/1.0.0": {
         "dependencies": {
-          "CenterManagement.Application": "1.0.0",
           "CenterManagement.Domain": "1.0.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.27",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.27"

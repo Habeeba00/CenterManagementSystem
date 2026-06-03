@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Access Denied";
+    Layout = "_Layout";
+}
+
+<div class="flex flex-col items-center justify-center min-h-[60vh] text-center">
+    <div class="bg-error-container/20 p-6 rounded-full mb-6">
+        <span class="material-symbols-outlined text-error text-[64px]">block</span>
+    </div>
+    <h1 class="text-headline-lg font-headline-lg text-on-surface mb-2">Access Denied</h1>
+    <p class="text-body-md font-body-md text-on-surface-variant mb-1">Error 403 — You do not have permission to access this page.</p>
+    <p class="text-body-sm font-body-sm text-outline mb-8">Please contact your administrator if you believe this is an error.</p>
+    <a asp-controller="Dashboard" asp-action="Index"
+       class="bg-primary text-white px-6 py-3 rounded-lg font-label-md text-label-md hover:bg-primary/90 active:scale-95 transition-all shadow-md">
+        Back to Dashboard
+    </a>
+</div>

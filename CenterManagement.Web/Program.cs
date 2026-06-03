@@ -1,20 +1,34 @@
 using CenterManagement.Domain.Entities;
 using CenterManagement.Infrastructure.Persistence;
+using CenterManagement.Infrastructure.DependencyInjection;
+using CenterManagement.Application.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using CenterManagement.Infrastructure.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<CenterManagementDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<CenterManagementDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(opts =>
+{
+    opts.LoginPath = "/Auth/Login";
+    opts.AccessDeniedPath = "/Auth/AccessDenied";
+    opts.ExpireTimeSpan = TimeSpan.FromHours(8);
+    opts.SlidingExpiration = true;
+});
+
+builder.Services.AddAuthorization(opts =>
+{
+    opts.AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
+    opts.AddPolicy("AdminOrInstructor", p => p.RequireRole("Admin", "Instructor"));
+});
 
 var app = builder.Build();
 
@@ -35,9 +49,6 @@ using (var scope = app.Services.CreateScope())
             userManager,
             roleManager);
 }
-
-
-app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 

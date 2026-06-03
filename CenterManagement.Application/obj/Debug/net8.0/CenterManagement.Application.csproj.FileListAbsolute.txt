@@ -13,3 +13,21 @@ D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSyste
 D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\refint\CenterManagement.Application.dll
 D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.pdb
 D:\ITI\MVC\final project\New folder\CenterManagementSystem\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\ref\CenterManagement.Application.dll
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Application.deps.json
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Application.dll
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Application.pdb
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Domain.dll
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Infrastructure.dll
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Domain.pdb
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Infrastructure.pdb
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.csproj.AssemblyReference.cache
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.AssemblyInfoInputs.cache
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.AssemblyInfo.cs
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.csproj.CoreCompileInputs.cache
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.sourcelink.json
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterMa.D6905B41.Up2Date
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.dll
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\refint\CenterManagement.Application.dll
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.pdb
+D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\ref\CenterManagement.Application.dll

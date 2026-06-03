@@ -1,49 +1,203 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html class="light" lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CenterManagement.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/CenterManagement.Web.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - EduManager Pro</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "error-container": "#ffdad6",
+                "on-tertiary-container": "#ffede6",
+                "surface-container-highest": "#d3e4fe",
+                "on-secondary": "#ffffff",
+                "secondary": "#545f73",
+                "on-surface-variant": "#434655",
+                "on-tertiary-fixed-variant": "#7d2d00",
+                "tertiary-fixed-dim": "#ffb596",
+                "on-secondary-fixed-variant": "#3c475a",
+                "on-tertiary-fixed": "#360f00",
+                "tertiary": "#943700",
+                "inverse-primary": "#b4c5ff",
+                "surface-variant": "#d3e4fe",
+                "secondary-fixed": "#d8e3fb",
+                "on-tertiary": "#ffffff",
+                "on-primary": "#ffffff",
+                "surface": "#f8f9ff",
+                "on-secondary-fixed": "#111c2d",
+                "on-primary-fixed-variant": "#003ea8",
+                "tertiary-container": "#bc4800",
+                "primary-fixed-dim": "#b4c5ff",
+                "on-surface": "#0b1c30",
+                "surface-container-high": "#dce9ff",
+                "background": "#f8f9ff",
+                "surface-bright": "#f8f9ff",
+                "primary-container": "#2563eb",
+                "secondary-container": "#d5e0f8",
+                "primary": "#004ac6",
+                "outline-variant": "#c3c6d7",
+                "on-primary-fixed": "#00174b",
+                "on-primary-container": "#eeefff",
+                "surface-tint": "#0053db",
+                "tertiary-fixed": "#ffdbcd",
+                "on-error-container": "#93000a",
+                "on-secondary-container": "#586377",
+                "surface-dim": "#cbdbf5",
+                "surface-container": "#e5eeff",
+                "surface-container-low": "#eff4ff",
+                "error": "#ba1a1a",
+                "on-background": "#0b1c30",
+                "outline": "#737686",
+                "inverse-on-surface": "#eaf1ff",
+                "on-error": "#ffffff",
+                "secondary-fixed-dim": "#bcc7de",
+                "primary-fixed": "#dbe1ff",
+                "surface-container-lowest": "#ffffff",
+                "inverse-surface": "#213145"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+              },
+              "spacing": {
+                "sidebar-width": "280px",
+                "stack-md": "16px",
+                "margin-mobile": "16px",
+                "gutter": "24px",
+                "container-max": "1440px",
+                "stack-sm": "8px",
+                "stack-lg": "32px"
+              },
+              "fontFamily": {
+                "display": ["Hanken Grotesk"],
+                "body-lg": ["Inter"],
+                "headline-lg": ["Hanken Grotesk"],
+                "label-md": ["Inter"],
+                "body-sm": ["Inter"],
+                "body-md": ["Inter"],
+                "headline-lg-mobile": ["Hanken Grotesk"],
+                "headline-sm": ["Hanken Grotesk"],
+                "label-sm": ["Inter"],
+                "headline-md": ["Hanken Grotesk"]
+              },
+              "fontSize": {
+                "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CenterManagement.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - CenterManagement.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+@{
+    var ctrl = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<!-- Sidebar Navigation Shell -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width bg-inverse-surface text-white z-50 shadow-lg border-r border-outline-variant flex flex-col p-4 overflow-y-auto">
+    <div class="mb-10 px-4">
+        <h1 class="text-headline-md font-headline-md font-bold text-white tracking-tight">EduManager Pro</h1>
+        <p class="font-label-md text-label-md text-secondary-fixed-dim opacity-70">Admin Console</p>
+    </div>
+    <nav class="flex-1 space-y-2">
+        <a asp-controller="Dashboard" asp-action="Index"
+           data-nav-controller="Dashboard"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out @(ctrl == "Dashboard" ? "bg-white/10 text-white border-l-4 border-primary" : "text-secondary-fixed-dim hover:text-white hover:bg-white/5")">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-label-md text-label-md">Dashboard</span>
+        </a>
+        <a asp-controller="Student" asp-action="Index"
+           data-nav-controller="Student"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out @(ctrl == "Student" ? "bg-white/10 text-white border-l-4 border-primary" : "text-secondary-fixed-dim hover:text-white hover:bg-white/5")">
+            <span class="material-symbols-outlined">group</span>
+            <span class="font-label-md text-label-md">Students</span>
+        </a>
+        <a asp-controller="Instructor" asp-action="Index"
+           data-nav-controller="Instructor"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out @(ctrl == "Instructor" ? "bg-white/10 text-white border-l-4 border-primary" : "text-secondary-fixed-dim hover:text-white hover:bg-white/5")">
+            <span class="material-symbols-outlined">school</span>
+            <span class="font-label-md text-label-md">Teachers</span>
+        </a>
+        <a asp-controller="Session" asp-action="Index"
+           data-nav-controller="Session"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out @(ctrl == "Session" ? "bg-white/10 text-white border-l-4 border-primary" : "text-secondary-fixed-dim hover:text-white hover:bg-white/5")">
+            <span class="material-symbols-outlined">calendar_month</span>
+            <span class="font-label-md text-label-md">Sessions</span>
+        </a>
+        <a asp-controller="Payment" asp-action="Index"
+           data-nav-controller="Payment"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out @(ctrl == "Payment" ? "bg-white/10 text-white border-l-4 border-primary" : "text-secondary-fixed-dim hover:text-white hover:bg-white/5")">
+            <span class="material-symbols-outlined">payments</span>
+            <span class="font-label-md text-label-md">Payments</span>
+        </a>
+        <a asp-controller="Analytics" asp-action="Index"
+           data-nav-controller="Analytics"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out @(ctrl == "Analytics" ? "bg-white/10 text-white border-l-4 border-primary" : "text-secondary-fixed-dim hover:text-white hover:bg-white/5")">
+            <span class="material-symbols-outlined">query_stats</span>
+            <span class="font-label-md text-label-md">Analytics</span>
+        </a>
+    </nav>
+    <div class="mt-auto border-t border-white/10 pt-4 space-y-2">
+        <form asp-action="Logout" asp-controller="Auth" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-white hover:bg-white/5 transition-all duration-200 ease-in-out w-full rounded-lg">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="font-label-md text-label-md">Logout</span>
+            </button>
+        </form>
+    </div>
+</aside>
+
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 z-40 h-16 ml-sidebar-width w-[calc(100%-280px)] bg-surface/80 backdrop-blur-md border-b border-outline-variant flex items-center justify-between px-gutter">
+    <div class="flex items-center gap-4 flex-1">
+        <div class="relative w-full max-w-md">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+            <input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm" placeholder="Search students, groups, or teachers..." type="text" />
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    </div>
+    <div class="flex items-center gap-4">
+        <button id="notif-bell" class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
+            <span class="material-symbols-outlined">notifications</span>
+            <span id="notif-count" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-error text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">0</span>
+        </button>
+        <div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+        <div class="flex items-center gap-3 pl-2">
+            <div class="text-right hidden sm:block">
+                <p class="font-label-md text-label-md text-on-surface">@User.Identity!.Name</p>
+            </div>
+            <div class="h-10 w-10 rounded-full bg-primary-container flex items-center justify-center text-white font-label-md">
+                <span class="material-symbols-outlined">person</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content Area -->
+<main class="ml-sidebar-width pt-24 px-gutter pb-stack-lg max-w-container-max mx-auto">
+    @RenderBody()
+</main>
+
+<script src="~/js/site.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
