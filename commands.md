@@ -3,15 +3,15 @@
 ## Git Commands
 
 ```Branch 
-git checkout -b Phase 'n'
+git checkout -b PhaseN
 git add .
-git commit -m "Phase 'n'"
-git push origin Phase 'n' 
+git commit -m "PhaseN "
+git push origin PhaseN 
 ```
 ```Merge
 git checkout main
 git pull
-git merge Phase 'n'
+git merge PhaseN
 git push origin main
 ``` 
 ## Prerequisites
