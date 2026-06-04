@@ -44,10 +44,15 @@ using (var scope = app.Services.CreateScope())
         services.GetRequiredService<
             RoleManager<IdentityRole>>();
 
+    var dbContext =
+        services.GetRequiredService<
+            CenterManagementDbContext>();
+
     await IdentitySeeder
         .SeedRolesAndAdminAsync(
             userManager,
-            roleManager);
+            roleManager,
+            dbContext);
 }
 
 app.UseStaticFiles();

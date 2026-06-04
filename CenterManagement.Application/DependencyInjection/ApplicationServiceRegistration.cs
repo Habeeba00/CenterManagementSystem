@@ -11,6 +11,7 @@ namespace CenterManagement.Application.DependencyInjection
             services.AddScoped<IAuditLogService, AuditLogService>();
             services.AddScoped<IFileUploadService, FileUploadService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IStudentService, StudentService>();
             // Each subsequent phase appends their own registrations here
             return services;
         }

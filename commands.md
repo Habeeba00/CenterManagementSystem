@@ -31,9 +31,10 @@ cd d:\ITI\BACKEND\MVC\Project\CenterManagementSystem
 ### Development Commands
 ```powershell
 # Navigate to project directory
-cd d:\ITI\BACKEND\MVC\Project\CenterManagementSystem
+cd d:\ITI\BACKEND\MVC\Project\
 
 # Build the project to ensure there are no compilation errors
+cd CenterManagementSystem
 dotnet build
 
 # (Optional) Apply EF Migrations if DbContext changes are made
