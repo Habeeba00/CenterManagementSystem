@@ -76,8 +76,8 @@ public class AttendanceService : IAttendanceService
             var userId = _qrService.DecodeQrCode(qrCode);
             if (string.IsNullOrEmpty(userId))
             {
-                await WriteQrCodeLogAsync(qrCode, scanTime, "INVALID");
-                return new ScanResultDto { Success = false, ErrorMessage = "Invalid QR code" };
+                // Cannot log to QrCodeLog because 'INVALID' is not a valid ApplicationUser FK
+                return new ScanResultDto { Success = false, ErrorMessage = "Invalid QR code format." };
             }
 
             var studentProfile = await _db.StudentProfiles.FirstOrDefaultAsync(s => s.UserId == userId && !s.IsDeleted);
@@ -214,7 +214,7 @@ public class AttendanceService : IAttendanceService
         catch (Exception ex)
         {
             await _auditLogService.LogAsync("SYSTEM", "ProcessScanError", "System", 0, null, ex.Message);
-            return new ScanResultDto { Success = false, ErrorMessage = "System error" };
+            return new ScanResultDto { Success = false, ErrorMessage = "Scan failed: " + ex.Message };
         }
     }
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace CenterManagement.Web.ViewModels.Student
@@ -24,7 +25,9 @@ namespace CenterManagement.Web.ViewModels.Student
 
         public IFormFile? Photo { get; set; }
 
+        [ValidateNever]
         public SelectList GradeLevelSelectList { get; set; } = null!;
+        [ValidateNever]
         public SelectList GroupSelectList { get; set; } = null!;
     }
 }
