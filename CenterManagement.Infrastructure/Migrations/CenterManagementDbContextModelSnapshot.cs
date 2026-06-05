@@ -312,11 +312,17 @@ namespace CenterManagement.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsLate")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsPresent")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("ScanTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("SessionId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -324,6 +330,8 @@ namespace CenterManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InstructorProfileId");
+
+                    b.HasIndex("SessionId");
 
                     b.ToTable("InstructorAttendances");
                 });
@@ -943,7 +951,15 @@ namespace CenterManagement.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CenterManagement.Domain.Entities.Session", "Session")
+                        .WithMany()
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("InstructorProfile");
+
+                    b.Navigation("Session");
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.InstructorProfile", b =>

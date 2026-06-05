@@ -12,7 +12,8 @@
           "CenterManagement.Domain": "1.0.0",
           "CenterManagement.Infrastructure": "1.0.0",
           "Microsoft.AspNetCore.Identity.UI": "8.0.27",
-          "Microsoft.EntityFrameworkCore.Design": "8.0.27"
+          "Microsoft.EntityFrameworkCore.Design": "8.0.27",
+          "QRCoder": "1.4.3"
         },
         "runtime": {
           "CenterManagement.Web.dll": {}
@@ -661,6 +662,14 @@
           }
         }
       },
+      "QRCoder/1.4.3": {
+        "runtime": {
+          "lib/net6.0/QRCoder.dll": {
+            "assemblyVersion": "1.4.3.0",
+            "fileVersion": "1.4.3.0"
+          }
+        }
+      },
       "System.ClientModel/1.0.0": {
         "dependencies": {
           "System.Memory.Data": "1.0.2"
@@ -865,7 +874,8 @@
       "CenterManagement.Application/1.0.0": {
         "dependencies": {
           "CenterManagement.Domain": "1.0.0",
-          "CenterManagement.Infrastructure": "1.0.0"
+          "CenterManagement.Infrastructure": "1.0.0",
+          "QRCoder": "1.4.3"
         },
         "runtime": {
           "CenterManagement.Application.dll": {
@@ -1185,6 +1195,13 @@
       "sha512": "sha512-KZYeKBET/2Z0gY1WlTAK7+RHTl7GSbtvTLDXEZZojUdAPqpQNDL6tHv7VUpqfX5VEOh+uRGKaZXkuD253nEOBQ==",
       "path": "mono.texttemplating/2.2.1",
       "hashPath": "mono.texttemplating.2.2.1.nupkg.sha512"
+    },
+    "QRCoder/1.4.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fWuFqjm8GTlEb2GqBl3Hi8HZZeZQwBSHxvRPtPjyNbT82H0ff0JwavKRBmMaXCno1Av6McPC8aJzri0Mj2w9Jw==",
+      "path": "qrcoder/1.4.3",
+      "hashPath": "qrcoder.1.4.3.nupkg.sha512"
     },
     "System.ClientModel/1.0.0": {
       "type": "package",

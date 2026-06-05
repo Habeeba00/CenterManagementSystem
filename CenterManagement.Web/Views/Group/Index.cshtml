@@ -1,0 +1,225 @@
+@model List<GroupListItemDto>
+
+@{
+    ViewData["Title"] = "Manage Groups";
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-stack-md mb-gutter">
+    <div class="space-y-1">
+        <h3 class="font-headline-md text-headline-md text-on-surface">Manage Groups</h3>
+        <p class="text-body-sm text-outline">Manage student groups, assign instructors, and monitor active sessions.</p>
+    </div>
+    @if (isAdmin)
+    {
+        <div class="flex items-center gap-3">
+            <a asp-action="Create" class="flex items-center gap-2 px-5 py-2.5 bg-primary-container text-white font-label-md text-label-md rounded-lg shadow-md hover:opacity-90 transition-all active:scale-95">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                New Group
+            </a>
+        </div>
+    }
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg text-body-sm flex items-center gap-2">
+        <span class="material-symbols-outlined text-green-600">check_circle</span>
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="mb-4 p-4 bg-error-container border border-error text-on-error-container rounded-lg text-body-sm flex items-center gap-2">
+        <span class="material-symbols-outlined text-error">error</span>
+        @TempData["Error"]
+    </div>
+}
+
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_10px_15px_-3px_rgba(30,41,59,0.05)] border border-outline-variant overflow-hidden mb-gutter">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-surface-container-low border-b border-outline-variant">
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Group Name</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Course</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Subject</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Instructor</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Enrollments</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Status</th>
+                    @if (isAdmin)
+                    {
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider text-right">Actions</th>
+                    }
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant">
+                @if (Model.Any())
+                {
+                    @foreach (var g in Model)
+                    {
+                        <tr class="hover:bg-surface-container transition-colors group">
+                            <td class="px-6 py-4 font-label-md text-label-md text-on-surface">@g.Name</td>
+                            <td class="px-6 py-4 text-body-sm text-on-surface-variant">@g.CourseName</td>
+                            <td class="px-6 py-4 text-body-sm text-on-surface-variant">@g.SubjectName</td>
+                            <td class="px-6 py-4 text-body-sm text-on-surface-variant">@g.InstructorName</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 rounded-full text-label-sm font-label-sm bg-primary-container text-white">@g.EnrollmentCount Students</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                @if (g.IsActive)
+                                {
+                                    <span class="flex items-center gap-1.5 text-label-sm font-label-sm text-primary">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="flex items-center gap-1.5 text-label-sm font-label-sm text-outline">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-outline"></span>
+                                        Inactive
+                                    </span>
+                                }
+                            </td>
+                            @if (isAdmin)
+                            {
+                                <td class="px-6 py-4 text-right">
+                                    <div class="relative inline-block">
+                                        <button class="p-2 rounded-lg hover:bg-surface-container-high text-outline group-hover:text-on-surface transition-all action-menu-btn" data-id="@g.Id">
+                                            <span class="material-symbols-outlined">more_vert</span>
+                                        </button>
+                                        <div class="hidden absolute right-0 top-full mt-1 w-48 bg-surface-container-lowest border border-outline-variant shadow-lg rounded-xl z-50 py-2 action-dropdown" id="dropdown-@g.Id">
+                                            <a asp-action="Edit" asp-route-id="@g.Id" class="w-full text-left px-4 py-2 text-body-sm hover:bg-surface-container transition-colors flex items-center gap-2">
+                                                <span class="material-symbols-outlined text-sm">edit</span> Edit Group
+                                            </a>
+                                            <button type="button" class="w-full text-left px-4 py-2 text-body-sm hover:bg-surface-container transition-colors flex items-center gap-2" onclick="openChangeInstructorModal(@g.Id, '@g.Name')">
+                                                <span class="material-symbols-outlined text-sm">person_swap</span> Change Instructor
+                                            </button>
+                                            <div class="h-[1px] bg-outline-variant my-1"></div>
+                                            <button type="button" class="w-full text-left px-4 py-2 text-body-sm text-error hover:bg-error-container/20 transition-colors flex items-center gap-2">
+                                                <span class="material-symbols-outlined text-sm">archive</span> Archive
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="@(isAdmin ? 7 : 6)" class="px-6 py-12 text-center">
+                            <span class="material-symbols-outlined text-outline text-4xl mb-2 block">groups</span>
+                            <p class="text-headline-sm font-headline-sm text-on-surface">No groups found</p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (isAdmin)
+{
+    <!-- Change Instructor Modal -->
+    <div id="changeInstructorModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100]">
+        <div class="bg-surface-container-lowest rounded-xl shadow-xl border border-outline-variant w-full max-w-md mx-4 overflow-hidden transform transition-all">
+            <div class="p-6 border-b border-outline-variant flex justify-between items-center bg-surface">
+                <h3 class="font-headline-sm text-headline-sm text-on-surface">Change Instructor</h3>
+                <button type="button" onclick="closeChangeInstructorModal()" class="text-outline hover:text-on-surface-variant transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-body-sm text-on-surface-variant">Select a new instructor for group <span id="modalGroupName" class="font-bold"></span>.</p>
+                <input type="hidden" id="modalGroupId" />
+                
+                <div class="space-y-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1">New Instructor</label>
+                    <select id="newInstructorId" asp-items="ViewBag.InstructorSelectList" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all outline-none">
+                        <option value="">Select Instructor</option>
+                    </select>
+                </div>
+            </div>
+            <div class="p-6 bg-surface border-t border-outline-variant flex justify-end gap-3">
+                <button type="button" onclick="closeChangeInstructorModal()" class="px-5 py-2.5 rounded-lg border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-low transition-colors">Cancel</button>
+                <button type="button" onclick="submitChangeInstructor()" class="px-5 py-2.5 rounded-lg bg-primary text-white font-label-md shadow-md hover:opacity-90 transition-all">Save Changes</button>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.action-menu-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = btn.dataset.id;
+                const dropdown = document.getElementById('dropdown-' + id);
+                document.querySelectorAll('.action-dropdown').forEach(d => {
+                    if (d !== dropdown) d.classList.add('hidden');
+                });
+                dropdown.classList.toggle('hidden');
+            });
+        });
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.action-dropdown').forEach(d => d.classList.add('hidden'));
+        });
+
+        @if (isAdmin)
+        {
+            <text>
+            function openChangeInstructorModal(groupId, groupName) {
+                document.getElementById('modalGroupId').value = groupId;
+                document.getElementById('modalGroupName').innerText = groupName;
+                document.getElementById('newInstructorId').value = '';
+                document.getElementById('changeInstructorModal').classList.remove('hidden');
+                document.querySelectorAll('.action-dropdown').forEach(d => d.classList.add('hidden'));
+            }
+
+            function closeChangeInstructorModal() {
+                document.getElementById('changeInstructorModal').classList.add('hidden');
+            }
+
+            async function submitChangeInstructor() {
+                const groupId = document.getElementById('modalGroupId').value;
+                const instructorProfileId = document.getElementById('newInstructorId').value;
+
+                if (!instructorProfileId) {
+                    alert('Please select an instructor.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/Group/ChangeInstructor', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ groupId: parseInt(groupId), instructorProfileId: parseInt(instructorProfileId) })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (err) {
+                    alert('Failed to change instructor.');
+                }
+            }
+            </text>
+        }
+    </script>
+}

@@ -1,0 +1,328 @@
+@model SessionDetailViewModel
+
+@{
+    ViewData["Title"] = "Session Details";
+    var s = Model.SessionDetail;
+    var isPast = s.SessionDate.Date < DateTime.UtcNow.Date || (s.SessionDate.Date == DateTime.UtcNow.Date && s.EndTime < DateTime.UtcNow.TimeOfDay);
+    var isNow = !isPast && s.SessionDate.Date == DateTime.UtcNow.Date && s.StartTime <= DateTime.UtcNow.TimeOfDay && s.EndTime >= DateTime.UtcNow.TimeOfDay;
+}
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="max-w-7xl mx-auto space-y-gutter">
+    <div class="flex items-center gap-4 mb-4">
+        <a href="javascript:history.back()" class="flex items-center gap-2 text-primary font-bold active:scale-95 duration-150">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span class="font-label-md text-label-md">Back</span>
+        </a>
+    </div>
+
+    <!-- Session Info Card (Bento Header) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+        <div class="lg:col-span-2 bg-surface-container-lowest p-stack-md rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_10px_15px_-3px_rgba(30,41,59,0.05)] border border-outline-variant">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <div>
+                    @if (s.IsCanceled)
+                    {
+                        <span class="px-2 py-1 bg-error-container text-on-error-container rounded text-[10px] font-bold tracking-wider uppercase mb-2 inline-block">Canceled</span>
+                    }
+                    else if (isNow)
+                    {
+                        <span class="px-2 py-1 bg-primary-fixed text-on-primary-fixed rounded text-[10px] font-bold tracking-wider uppercase mb-2 inline-block">Active Session</span>
+                    }
+                    else if (isPast)
+                    {
+                        <span class="px-2 py-1 bg-surface-container-high text-on-surface-variant rounded text-[10px] font-bold tracking-wider uppercase mb-2 inline-block">Completed</span>
+                    }
+                    else
+                    {
+                        <span class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded text-[10px] font-bold tracking-wider uppercase mb-2 inline-block">Upcoming</span>
+                    }
+                    <h2 class="font-headline-lg text-headline-lg text-on-surface">@s.CourseName</h2>
+                </div>
+                <div class="flex gap-3">
+                    @if (Model.CanCancel && !s.IsCanceled && !isPast)
+                    {
+                        <button onclick="openCancelModal()" class="px-4 py-2 bg-error text-on-error rounded-lg font-label-md text-label-md hover:opacity-90 transition-all active:scale-95 shadow-md">
+                            Cancel Session
+                        </button>
+                    }
+                </div>
+            </div>
+            
+            @if (s.IsCanceled && !string.IsNullOrEmpty(s.CancelReason))
+            {
+                <div class="mb-6 p-4 bg-error-container text-on-error-container rounded-lg border border-error/20">
+                    <p class="font-label-md text-label-md mb-1">Cancellation Reason:</p>
+                    <p class="font-body-sm text-body-sm">@s.CancelReason</p>
+                </div>
+            }
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="space-y-1">
+                    <p class="text-label-sm text-outline">Teacher</p>
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">person</span>
+                        <p class="font-body-md text-body-md font-semibold">@s.InstructorName</p>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-label-sm text-outline">Group</p>
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">groups</span>
+                        <p class="font-body-md text-body-md font-semibold">@s.GroupName</p>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-label-sm text-outline">Schedule</p>
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">schedule</span>
+                        <p class="font-body-md text-body-md font-semibold">@DateTime.Today.Add(s.StartTime).ToString("hh:mm tt")</p>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-label-sm text-outline">Date</p>
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">calendar_today</span>
+                        <p class="font-body-md text-body-md font-semibold">@s.SessionDate.ToString("MMM dd, yyyy")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- QR / Scan Status Card (from sessionDeatails.html) -->
+        <div class="bg-primary-container text-on-primary-container p-stack-md rounded-xl shadow-lg relative overflow-hidden flex flex-col justify-center items-center text-center">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <span class="material-symbols-outlined text-6xl">qr_code_scanner</span>
+            </div>
+            <div class="relative z-10 space-y-4">
+                @if (isNow && !s.IsCanceled)
+                {
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto animate-pulse">
+                        <span class="material-symbols-outlined text-3xl">qr_code_2</span>
+                    </div>
+                    <div>
+                        <h3 class="font-headline-sm text-headline-sm">Ready to Scan</h3>
+                        <p class="font-body-sm text-body-sm opacity-80">Scanning system active for @s.GroupName</p>
+                    </div>
+                    <div id="scan-error-alert" class="hidden bg-error-container text-on-error-container p-2 rounded text-label-sm">
+                        <span id="scan-error-msg"></span>
+                    </div>
+                    <input id="qr-input" type="text" class="w-full px-4 py-2 text-primary border border-outline rounded-lg text-black" placeholder="Type or scan QR code..." onkeydown="if(event.key==='Enter') processScan()">
+                    <button id="scan-btn" onclick="processScan()" class="w-full py-3 bg-white text-primary-container rounded-lg font-bold text-label-md shadow-lg active:scale-95 transition-all">
+                        Process Scan
+                    </button>
+                }
+                else
+                {
+                    <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto">
+                        <span class="material-symbols-outlined text-3xl">qr_code_2</span>
+                    </div>
+                    <div>
+                        <h3 class="font-headline-sm text-headline-sm">Scanner Offline</h3>
+                        <p class="font-body-sm text-body-sm opacity-80">Session is not currently active</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase 4 Attendance Section -->
+    <div id="phase4-attendance-section" class="bg-surface-container-lowest rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_10px_15px_-3px_rgba(30,41,59,0.05)] border border-outline-variant overflow-hidden">
+        <div class="px-stack-md py-4 border-b border-outline-variant flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <h3 class="font-headline-sm text-headline-sm text-on-surface">Attendance List</h3>
+                <div id="attend-summary" class="flex gap-4 font-label-md">
+                    <span class="text-primary font-bold">Present: <span id="sum-present">0</span></span>
+                    <span class="text-orange-500 font-bold">Late: <span id="sum-late">0</span></span>
+                    <span class="text-error font-bold">Absent: <span id="sum-absent">0</span></span>
+                </div>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-surface-container-low text-on-surface-variant font-label-sm border-b border-outline-variant">
+                    <tr>
+                        <th class="p-4 font-semibold">Student</th>
+                        <th class="p-4 font-semibold">Status</th>
+                        <th class="p-4 font-semibold">Check-In</th>
+                        <th class="p-4 font-semibold text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="attend-tbody" class="divide-y divide-outline-variant text-body-md">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.CanCancel && !s.IsCanceled && !isPast)
+{
+    <!-- Cancel Session Modal -->
+    <div id="cancelModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100]">
+        <div class="bg-surface-container-lowest rounded-xl shadow-xl border border-outline-variant w-full max-w-md mx-4 overflow-hidden transform transition-all">
+            <div class="p-6 border-b border-outline-variant flex justify-between items-center bg-surface">
+                <h3 class="font-headline-sm text-headline-sm text-error">Cancel Session</h3>
+                <button type="button" onclick="closeCancelModal()" class="text-outline hover:text-on-surface-variant transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-body-sm text-on-surface-variant">Are you sure you want to cancel this session? This action cannot be undone and will notify all enrolled students.</p>
+                <div class="space-y-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1">Reason for Cancellation</label>
+                    <textarea id="cancelReason" rows="3" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-error focus:ring-2 focus:ring-error/10 transition-all outline-none" placeholder="e.g. Instructor is sick"></textarea>
+                </div>
+            </div>
+            <div class="p-6 bg-surface border-t border-outline-variant flex justify-end gap-3">
+                <button type="button" onclick="closeCancelModal()" class="px-5 py-2.5 rounded-lg border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-low transition-colors">Go Back</button>
+                <button type="button" onclick="submitCancelSession()" class="px-5 py-2.5 rounded-lg bg-error text-on-error font-label-md shadow-md hover:opacity-90 transition-all">Confirm Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        @if (Model.CanCancel)
+        {
+            <text>
+            function openCancelModal() {
+                document.getElementById('cancelModal').classList.remove('hidden');
+                document.getElementById('cancelReason').value = '';
+            }
+
+            function closeCancelModal() {
+                document.getElementById('cancelModal').classList.add('hidden');
+            }
+
+            async function submitCancelSession() {
+                const reason = document.getElementById('cancelReason').value;
+                if (!reason.trim()) {
+                    alert('Please provide a reason for cancellation.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/Session/Cancel/@s.SessionId', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ cancelReason: reason })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (err) {
+                    alert('Failed to cancel session.');
+                }
+            }
+            </text>
+        }
+
+        function getAntiForgeryToken() {
+            return '';
+        }
+
+        const SESSION_ID = @Model.SessionDetail.SessionId;
+
+        async function processScan() {
+            const qrInput = document.getElementById('qr-input');
+            if(!qrInput) return;
+            const qrCode = qrInput.value.trim();
+            if (!qrCode) return;
+            const res = await fetch('/Attendance/Scan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': getAntiForgeryToken()
+                },
+                body: JSON.stringify({ qrCode })
+            });
+            const data = await res.json();
+            qrInput.value = '';
+            if (!data.success && data.errorMessage && data.errorMessage !== 'Already scanned') {
+                showError(data.errorMessage);
+                return;
+            }
+            prependAttendanceRow(data);
+            fetchSummary();
+        }
+
+        function showError(msg) {
+            const alert = document.getElementById('scan-error-alert');
+            document.getElementById('scan-error-msg').textContent = msg;
+            alert.classList.remove('hidden');
+            setTimeout(() => alert.classList.add('hidden'), 4000);
+        }
+
+        function prependAttendanceRow(data) {
+            const tbody = document.getElementById('attend-tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="p-4">${data.studentName ?? data.instructorName ?? '—'}</td>
+                <td class="p-4"><span class="${data.isLate ? 'text-orange-500 font-bold' : 'text-primary font-bold'}">${data.isLate ? 'Late' : 'Present'}</span></td>
+                <td class="p-4">${data.scanTime ? new Date(data.scanTime).toLocaleTimeString() : '—'}</td>
+                <td class="p-4 text-right"><!-- manual mark buttons --></td>
+            `;
+            tbody.prepend(row);
+        }
+
+        async function fetchSummary() {
+            const res = await fetch(`/Attendance/SessionSummary/${SESSION_ID}`);
+            const data = await res.json();
+            document.getElementById('sum-present').textContent = data.presentCount;
+            document.getElementById('sum-late').textContent = data.lateCount;
+            document.getElementById('sum-absent').textContent = data.absentCount;
+        }
+
+        async function fetchAttendanceList() {
+            const res = await fetch(`/Attendance/SessionList/${SESSION_ID}?page=1`);
+            const data = await res.json();
+            const tbody = document.getElementById('attend-tbody');
+            tbody.innerHTML = '';
+            (data.items ?? []).forEach(a => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="p-4">${a.studentName}</td>
+                    <td class="p-4"><span class="${a.isLate ? 'text-orange-500 font-bold' : (a.isPresent ? 'text-primary font-bold' : 'text-error font-bold')}">${a.isLate ? 'Late' : (a.isPresent ? 'Present' : 'Absent')}</span></td>
+                    <td class="p-4">${new Date(a.scanTime).toLocaleTimeString()}</td>
+                    <td class="p-4 text-right">
+                        <button onclick="markManual(${a.studentProfileId}, ${SESSION_ID}, true, false)" class="text-primary mx-1 font-bold text-lg">✓</button>
+                        <button onclick="markManual(${a.studentProfileId}, ${SESSION_ID}, false, false)" class="text-error mx-1 font-bold text-lg">✗</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function markManual(studentProfileId, sessionId, isPresent, isLate) {
+            await fetch('/Attendance/MarkManual', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': getAntiForgeryToken() },
+                body: JSON.stringify({ studentProfileId, sessionId, isPresent, isLate })
+            });
+            fetchAttendanceList();
+            fetchSummary();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAttendanceList();
+            fetchSummary();
+            setInterval(fetchSummary, 30000);
+            // Auto-focus QR input for hands-free scanning
+            const qrInput = document.getElementById('qr-input');
+            if(qrInput) qrInput.focus();
+        });
+    </script>
+}

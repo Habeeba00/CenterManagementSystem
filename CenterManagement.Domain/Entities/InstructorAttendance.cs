@@ -1,4 +1,4 @@
-﻿using CenterManagement.Domain.Common;
+using CenterManagement.Domain.Common;
 
 namespace CenterManagement.Domain.Entities
 {
@@ -11,5 +11,10 @@ namespace CenterManagement.Domain.Entities
         public DateTime ScanTime { get; set; }
 
         public bool IsPresent { get; set; }
+
+        public int SessionId { get; set; }
+        public Session Session { get; set; } = null!;
+
+        public bool IsLate { get; set; }
     }
 }

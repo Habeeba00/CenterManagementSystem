@@ -57,6 +57,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "QRCoder": {
+              "target": "Package",
+              "version": "[1.4.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

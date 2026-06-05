@@ -319,3 +319,4 @@ D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Web\obj\Debug
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Web\obj\Debug\net8.0\CenterManagement.Web.pdb
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Web\obj\Debug\net8.0\CenterManagement.Web.genruntimeconfig.cache
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Web\obj\Debug\net8.0\ref\CenterManagement.Web.dll
+d:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Web\bin\Debug\net8.0\QRCoder.dll

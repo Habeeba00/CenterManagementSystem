@@ -1,0 +1,67 @@
+@model CreateCourseViewModel
+
+@{
+    ViewData["Title"] = "New Course";
+}
+
+<div class="max-w-2xl mx-auto">
+    <div class="flex items-center gap-4 mb-gutter">
+        <a href="javascript:history.back()" class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+            <span class="material-symbols-outlined text-on-surface-variant">arrow_back</span>
+        </a>
+        <h2 class="font-headline-md text-headline-md text-on-surface">New Course</h2>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mb-6 p-4 bg-error-container border border-error/30 rounded-xl">
+            <div asp-validation-summary="All" class="text-on-error-container text-body-sm"></div>
+        </div>
+    }
+
+    <form asp-action="CreatePost" method="post" class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+        @Html.AntiForgeryToken()
+        
+        <div class="p-8 space-y-4">
+            <div class="space-y-1">
+                <label asp-for="Name" class="font-label-sm text-label-sm text-on-surface-variant ml-1">Course Name</label>
+                <input asp-for="Name" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all outline-none" placeholder="e.g. Intensive Physics" />
+                <span asp-validation-for="Name" class="text-error text-label-sm"></span>
+            </div>
+
+            <div class="space-y-1">
+                <label asp-for="SubjectId" class="font-label-sm text-label-sm text-on-surface-variant ml-1">Subject</label>
+                <select asp-for="SubjectId" asp-items="Model.SubjectSelectList" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all outline-none">
+                    <option value="">Select Subject</option>
+                </select>
+                <span asp-validation-for="SubjectId" class="text-error text-label-sm"></span>
+            </div>
+
+            <div class="space-y-1">
+                <label asp-for="GradeLevelId" class="font-label-sm text-label-sm text-on-surface-variant ml-1">Grade Level</label>
+                <select asp-for="GradeLevelId" asp-items="Model.GradeLevelSelectList" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all outline-none">
+                    <option value="">Select Grade Level</option>
+                </select>
+                <span asp-validation-for="GradeLevelId" class="text-error text-label-sm"></span>
+            </div>
+
+            <div class="space-y-1">
+                <label asp-for="Price" class="font-label-sm text-label-sm text-on-surface-variant ml-1">Price (Monthly)</label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">payments</span>
+                    <input asp-for="Price" type="number" step="0.01" class="w-full pl-10 pr-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all outline-none" placeholder="0.00" />
+                </div>
+                <span asp-validation-for="Price" class="text-error text-label-sm"></span>
+            </div>
+        </div>
+
+        <div class="p-6 bg-surface border-t border-outline-variant grid grid-cols-2 gap-4">
+            <button type="button" onclick="history.back()" class="w-full py-3.5 rounded-lg border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-low transition-colors">Cancel</button>
+            <button type="submit" class="w-full py-3.5 rounded-lg bg-primary-container text-white font-label-md shadow-md hover:brightness-110 transition-all">Save Course</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

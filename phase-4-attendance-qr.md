@@ -92,6 +92,7 @@ Task<List<StudentAttendanceDto>> GetStudentAttendanceHistoryAsync(
     int studentProfileId, int? groupId, DateTime? from, DateTime? to);
 Task<decimal> GetStudentAttendanceRateAsync(int studentProfileId);
 Task<Session?> GetSessionForStudentAtTimeAsync(int studentProfileId, DateTime scanTime);
+Task<Session?> GetSessionForInstructorAtTimeAsync(int instructorProfileId, DateTime scanTime);
 ```
 
 #### `CenterManagement.Application/Interfaces/IQrService.cs`
@@ -165,38 +166,62 @@ public async Task<Session?> GetSessionForStudentAtTimeAsync(int studentProfileId
 
 ---
 
-**`ProcessScanAsync` — 9-step flow (implement exactly in this order):**
+**`GetSessionForInstructorAtTimeAsync`:**
+
+```csharp
+public async Task<Session?> GetSessionForInstructorAtTimeAsync(int instructorProfileId, DateTime scanTime)
+{
+    var scanTimeOfDay = scanTime.TimeOfDay;
+    var scanDate = scanTime.Date;
+    var graceWindow = TimeSpan.FromMinutes(30);
+
+    return await _db.Sessions
+        .Where(s =>
+            s.Group.InstructorProfileId == instructorProfileId &&
+            !s.IsDeleted &&
+            !s.IsCanceled &&
+            s.SessionDate.Date == scanDate &&
+            s.StartTime <= scanTimeOfDay &&
+            s.EndTime.Add(graceWindow) >= scanTimeOfDay)
+        .OrderByDescending(s => s.StartTime)
+        .FirstOrDefaultAsync();
+}
+```
+
+---
+
+**`ProcessScanAsync` — Updated flow to support both Student and Instructor (implement exactly in this order):**
 
 ```
 Step 1: Decode QR → userId via IQrService.DecodeQrCode
         If null → log QrCodeLog(QrCode=raw, ScanTime, UserId="INVALID") → return { Success=false, ErrorMessage="Invalid QR code" }
 
-Step 2: Find StudentProfile by UserId
-        If null → log → return { Success=false, ErrorMessage="Student not found" }
+Step 2: Determine if user is a Student or Instructor
+        Check _db.StudentProfiles and _db.InstructorProfiles for userId.
+        If both null → log → return { Success=false, ErrorMessage="User not found" }
 
-Step 3: Call GetSessionForStudentAtTimeAsync(studentProfile.Id, scanTime)
-        If null → log → return { Success=false, ErrorMessage="No active session found at this time" }
+Step 3: If Student:
+        a. Call GetSessionForStudentAtTimeAsync(studentProfile.Id, scanTime)
+        b. If null → log → return { Success=false, ErrorMessage="No active session found at this time" }
+        c. Check existing StudentAttendance for (StudentProfileId, SessionId). If exists → log → return Success=true, ErrorMessage="Already scanned", IsLate=existing.IsLate
+        d. Compute IsLate
+        e. Create StudentAttendance { StudentProfileId, SessionId, IsPresent=true, IsLate, ScanTime }
+        f. catch DbUpdateException for UNIQUE constraint → return { Success=true, ErrorMessage="Already scanned" }
 
-Step 4: Load session with Group, Course.Subject, GradeLevel, InstructorProfile.User (needed for response)
+Step 4: If Instructor:
+        a. Call GetSessionForInstructorAtTimeAsync(instructorProfile.Id, scanTime)
+        b. If null → log → return { Success=false, ErrorMessage="No active session found at this time" }
+        c. Check existing InstructorAttendance for (InstructorProfileId, SessionId). If exists → log → return Success=true, ErrorMessage="Already scanned", IsLate=existing.IsLate
+        d. Compute IsLate
+        e. Create InstructorAttendance { InstructorProfileId, SessionId, IsPresent=true, IsLate, ScanTime }
+        f. catch DbUpdateException for UNIQUE constraint → return { Success=true, ErrorMessage="Already scanned" }
 
-Step 5: Check existing StudentAttendance for same StudentProfileId + SessionId
-        If exists → log → return { Success=true, StudentName=..., IsLate=existing.IsLate, ErrorMessage="Already scanned" }
-        (return Success=true here so the UI still shows the student info)
+Step 5: Load session with Group, Course.Subject, GradeLevel, InstructorProfile.User (needed for response)
 
-Step 6: Compute IsLate:
-        var graceMinutes = _config.GetValue<int>("AppSettings:AttendanceLateGraceMinutes");
-        var isLate = scanTime.TimeOfDay > session.StartTime.Add(TimeSpan.FromMinutes(graceMinutes));
-
-Step 7: Create StudentAttendance { StudentProfileId, SessionId, IsPresent=true, IsLate, ScanTime }
-        _db.StudentAttendances.Add(attendance);
-        try { await _db.SaveChangesAsync(); }
-        catch (DbUpdateException ex) when (ex.InnerException?.Message.Contains("UNIQUE") == true)
-        { return { Success=true, ErrorMessage="Already scanned" }; }
-
-Step 8: Write QrCodeLog { QrCode=rawQrCode, ScanTime, UserId=studentProfile.UserId }
+Step 6: Write QrCodeLog { QrCode=rawQrCode, ScanTime, UserId=userId }
         await _db.SaveChangesAsync();
 
-Step 9: Return ScanResultDto { Success=true, StudentName, SessionTitle, GroupName, InstructorName, GradeLevelName, IsLate, ScanTime, AttendanceId=attendance.Id }
+Step 7: Return ScanResultDto { Success=true, StudentName (if student), SessionTitle, GroupName, InstructorName, GradeLevelName, IsLate, ScanTime, AttendanceId=attendance.Id }
 ```
 
 Wrap entire method in `try/catch(Exception ex)` → write to `IAuditLogService` → return `{ Success=false, ErrorMessage="System error" }`.
@@ -404,7 +429,8 @@ document.addEventListener('DOMContentLoaded', () => {
 ## Completion Checklist
 
 - [ ] `POST /Attendance/Scan` with valid base64-encoded student userId → `Success=true`, `StudentName` populated, `StudentAttendance` created in DB
-- [ ] Second scan with same QR for same session → `Success=true`, `ErrorMessage="Already scanned"`, NO duplicate row in `StudentAttendances`
+- [ ] `POST /Attendance/Scan` with valid base64-encoded instructor userId → `Success=true`, `InstructorAttendance` created in DB
+- [ ] Second scan with same QR for same session → `Success=true`, `ErrorMessage="Already scanned"`, NO duplicate row in `StudentAttendances` or `InstructorAttendances`
 - [ ] DB unique constraint test: attempt direct INSERT of duplicate `(StudentProfileId, SessionId)` → caught as `DbUpdateException`, not 500 error
 - [ ] Scan with invalid base64 → `Success=false`, `ErrorMessage="Invalid QR code"`, `QrCodeLog` written
 - [ ] Scan outside any session time window → `Success=false`, `ErrorMessage="No active session found at this time"`

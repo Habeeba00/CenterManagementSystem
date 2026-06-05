@@ -1,0 +1,79 @@
+@model CreateSessionViewModel
+
+@{
+    ViewData["Title"] = "Schedule Session";
+}
+
+<div class="max-w-2xl mx-auto">
+    <div class="flex items-center gap-4 mb-gutter">
+        <a href="javascript:history.back()" class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+            <span class="material-symbols-outlined text-on-surface-variant">arrow_back</span>
+        </a>
+        <h2 class="font-headline-md text-headline-md text-on-surface">Schedule Session</h2>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mb-6 p-4 bg-error-container border border-error/30 rounded-xl">
+            <div asp-validation-summary="All" class="text-on-error-container text-body-sm"></div>
+        </div>
+    }
+
+    <form asp-action="CreatePost" method="post" id="createSessionForm" class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+        @Html.AntiForgeryToken()
+        
+        <div class="p-8 space-y-4">
+            <div class="space-y-1">
+                <label asp-for="GroupId" class="font-label-sm text-label-sm text-on-surface-variant ml-1">Select Group</label>
+                <select asp-for="GroupId" asp-items="Model.GroupSelectList" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all outline-none">
+                    <option value="">Select Group</option>
+                </select>
+                <span asp-validation-for="GroupId" class="text-error text-label-sm"></span>
+            </div>
+
+            <div class="space-y-1">
+                <label asp-for="SessionDate" class="font-label-sm text-label-sm text-on-surface-variant ml-1">Session Date</label>
+                <input asp-for="SessionDate" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all outline-none" />
+                <span asp-validation-for="SessionDate" class="text-error text-label-sm"></span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label asp-for="StartTime" class="font-label-sm text-label-sm text-on-surface-variant ml-1">Start Time</label>
+                    <input asp-for="StartTime" type="time" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all outline-none" />
+                    <span asp-validation-for="StartTime" class="text-error text-label-sm"></span>
+                </div>
+                
+                <div class="space-y-1">
+                    <label asp-for="EndTime" class="font-label-sm text-label-sm text-on-surface-variant ml-1">End Time</label>
+                    <input asp-for="EndTime" type="time" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all outline-none" />
+                    <span asp-validation-for="EndTime" class="text-error text-label-sm"></span>
+                </div>
+            </div>
+            
+            <p id="timeError" class="text-error text-label-sm hidden mt-2">Start time must be before end time.</p>
+        </div>
+
+        <div class="p-6 bg-surface border-t border-outline-variant grid grid-cols-2 gap-4">
+            <button type="button" onclick="history.back()" class="w-full py-3.5 rounded-lg border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-low transition-colors">Cancel</button>
+            <button type="submit" class="w-full py-3.5 rounded-lg bg-primary-container text-white font-label-md shadow-md hover:brightness-110 transition-all">Schedule Session</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('createSessionForm').addEventListener('submit', function(e) {
+            const start = document.getElementById('StartTime').value;
+            const end = document.getElementById('EndTime').value;
+            
+            if (start && end && start >= end) {
+                e.preventDefault();
+                document.getElementById('timeError').classList.remove('hidden');
+            } else {
+                document.getElementById('timeError').classList.add('hidden');
+            }
+        });
+    </script>
+}
