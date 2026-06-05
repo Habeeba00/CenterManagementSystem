@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CenterManagement.Application.DTOs.Attendance;
 using CenterManagement.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -36,11 +37,12 @@ public class AttendanceController : Controller
     {
         try
         {
-            if (!User.IsInRole("Admin")) return Forbid();
+            if (!User.IsInRole("Admin")) 
+            {
+                return Json(new { success = false, error = "Only admins can mark attendance manually." });
+            }
 
-            // Assuming user ID is derived from NameIdentifier claim or similar, 
-            // but the plan says "string adminId" is needed
-            var adminId = User.Identity?.Name ?? "Admin";
+            var adminId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Admin";
             await _attendanceService.MarkManuallyAsync(dto, adminId);
             return Json(new { success = true });
         }
@@ -80,11 +82,11 @@ public class AttendanceController : Controller
 
     [HttpGet("Attendance/StudentHistory/{studentProfileId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> StudentHistory(int studentProfileId)
+    public async Task<IActionResult> StudentHistory(int studentProfileId, int? groupId, DateTime? from, DateTime? to)
     {
         try
         {
-            var list = await _attendanceService.GetStudentAttendanceHistoryAsync(studentProfileId, null, null, null);
+            var list = await _attendanceService.GetStudentAttendanceHistoryAsync(studentProfileId, groupId, from, to);
             return Json(list);
         }
         catch (Exception ex)
