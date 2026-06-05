@@ -1,0 +1,145 @@
+@model PagedResult<CenterManagement.Domain.Entities.AuditLog>
+@{
+    ViewData["Title"] = "Audit Log";
+    Layout = "_Layout";
+}
+
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+    <div>
+        <h1 class="text-headline-lg font-headline-lg text-on-surface">Audit Log</h1>
+        <p class="text-body-md text-on-surface-variant mt-1">Track all system actions across all modules.</p>
+    </div>
+    <div class="mt-4 sm:mt-0">
+        <span class="text-body-sm text-on-surface-variant bg-surface-container-low px-3 py-1.5 rounded-lg">
+            @Model.TotalCount total records
+        </span>
+    </div>
+</div>
+
+<!-- Filter Form -->
+<div class="bg-white border border-outline-variant p-6 rounded-xl card-shadow mb-6">
+    <form method="get" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+        <div>
+            <label class="block text-label-sm font-label-sm text-on-surface-variant mb-1">User ID</label>
+            <input type="text" name="userId" value="@ViewBag.UserId"
+                   class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-body-sm"
+                   placeholder="Filter by user..." />
+        </div>
+        <div>
+            <label class="block text-label-sm font-label-sm text-on-surface-variant mb-1">Entity Name</label>
+            <input type="text" name="entityName" value="@ViewBag.EntityName"
+                   class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-body-sm"
+                   placeholder="e.g. Student, Course..." />
+        </div>
+        <div>
+            <label class="block text-label-sm font-label-sm text-on-surface-variant mb-1">From Date</label>
+            <input type="date" name="from" value="@(ViewBag.From != null ? ((DateTime)ViewBag.From).ToString("yyyy-MM-dd") : "")"
+                   class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-body-sm" />
+        </div>
+        <div>
+            <label class="block text-label-sm font-label-sm text-on-surface-variant mb-1">To Date</label>
+            <input type="date" name="to" value="@(ViewBag.To != null ? ((DateTime)ViewBag.To).ToString("yyyy-MM-dd") : "")"
+                   class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-body-sm" />
+        </div>
+        <div class="flex gap-2">
+            <button type="submit"
+                    class="px-5 py-2 bg-primary-container text-white rounded-lg hover:opacity-90 transition-opacity font-label-md text-label-md">
+                <span class="material-symbols-outlined text-[18px] align-middle mr-1">filter_list</span> Apply
+            </button>
+            <a asp-action="Index"
+               class="px-5 py-2 bg-surface-container-low border border-outline-variant text-on-surface rounded-lg hover:bg-surface-container transition-colors font-label-md text-label-md">
+                Clear
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Audit Log Table -->
+<div class="bg-white border border-outline-variant rounded-xl card-shadow overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-surface-container-low border-b border-outline-variant">
+                <tr>
+                    <th class="px-5 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Date</th>
+                    <th class="px-5 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">User</th>
+                    <th class="px-5 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Action</th>
+                    <th class="px-5 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Entity</th>
+                    <th class="px-5 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Entity ID</th>
+                    <th class="px-5 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Old Values</th>
+                    <th class="px-5 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">New Values</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant">
+                @if (!Model.Items.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="px-5 py-12 text-center text-on-surface-variant text-body-sm">
+                            <span class="material-symbols-outlined text-3xl mb-2 block opacity-50">description</span>
+                            No audit records found matching your criteria.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var log in Model.Items)
+                    {
+                        <tr class="hover:bg-surface-container-low transition-colors">
+                            <td class="px-5 py-3 text-body-sm text-on-surface whitespace-nowrap">
+                                @log.ActionDate.ToString("MMM dd, yyyy HH:mm")
+                            </td>
+                            <td class="px-5 py-3 text-body-sm text-on-surface-variant">
+                                @(log.User?.FullName ?? log.UserId)
+                            </td>
+                            <td class="px-5 py-3">
+                                @{
+                                    var actionColor = log.Action switch
+                                    {
+                                        "Create" => "bg-green-100 text-green-700",
+                                        "Update" => "bg-blue-100 text-blue-700",
+                                        "Delete" => "bg-red-100 text-red-700",
+                                        _ => "bg-gray-100 text-gray-700"
+                                    };
+                                }
+                                <span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm @actionColor">
+                                    @log.Action
+                                </span>
+                            </td>
+                            <td class="px-5 py-3 text-body-sm text-on-surface-variant">@log.EntityName</td>
+                            <td class="px-5 py-3 text-body-sm text-on-surface-variant">@log.EntityId</td>
+                            <td class="px-5 py-3 text-body-sm text-on-surface-variant max-w-[200px] truncate" title="@log.OldValues">
+                                @(log.OldValues != null && log.OldValues.Length > 50 ? log.OldValues.Substring(0, 50) + "…" : log.OldValues ?? "—")
+                            </td>
+                            <td class="px-5 py-3 text-body-sm text-on-surface-variant max-w-[200px] truncate" title="@log.NewValues">
+                                @(log.NewValues != null && log.NewValues.Length > 50 ? log.NewValues.Substring(0, 50) + "…" : log.NewValues ?? "—")
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <div class="flex items-center justify-between px-5 py-4 border-t border-outline-variant bg-surface-container-low">
+            <p class="text-body-sm text-on-surface-variant">
+                Page @Model.Page of @Model.TotalPages (@Model.TotalCount total records)
+            </p>
+            <div class="flex gap-1">
+                @for (int p = 1; p <= Model.TotalPages; p++)
+                {
+                    <a asp-route-page="@p"
+                       asp-route-userId="@ViewBag.UserId"
+                       asp-route-entityName="@ViewBag.EntityName"
+                       asp-route-from="@(ViewBag.From != null ? ((DateTime)ViewBag.From).ToString("yyyy-MM-dd") : null)"
+                       asp-route-to="@(ViewBag.To != null ? ((DateTime)ViewBag.To).ToString("yyyy-MM-dd") : null)"
+                       class="px-3 py-1.5 rounded-lg text-label-sm font-label-sm transition-colors @(p == Model.Page ? "bg-primary-container text-white" : "text-on-surface-variant hover:bg-surface-container")">
+                        @p
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,568 @@
+@model PaymentIndexViewModel
+
+@{
+    ViewData["Title"] = "Payments & Financials";
+}
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+    }
+    .badge-green {
+        display: inline-block;
+        padding: 2px 10px;
+        background: #dcfce7;
+        color: #15803d;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+    }
+    .badge-orange {
+        display: inline-block;
+        padding: 2px 10px;
+        background: #fef3c7;
+        color: #b45309;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+    }
+    .student-suggestion {
+        cursor: pointer;
+        padding: 10px 16px;
+        transition: background 0.15s;
+    }
+    .student-suggestion:hover {
+        background: #eff4ff;
+    }
+</style>
+
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-gutter">
+    <div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Financials & Revenue</h2>
+        <p class="text-body-md text-on-surface-variant">Real-time overview of your educational center's financial health.</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <button onclick="window.location.href='/Payment/Export'"
+                class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-primary font-label-md rounded-lg hover:bg-surface-container-high transition-all active:scale-95">
+            <span class="material-symbols-outlined text-[20px]">file_download</span>
+            Export Report
+        </button>
+        <button onclick="openPaymentModal()"
+                class="flex items-center gap-2 px-6 py-2 bg-primary-container text-white font-label-md rounded-lg shadow-lg shadow-primary/20 hover:bg-primary transition-all active:scale-95">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            Add Payment
+        </button>
+    </div>
+</div>
+
+<!-- Summary Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-gutter mb-gutter">
+    <!-- Total Due Today -->
+    <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant flex flex-col justify-between min-h-[160px]">
+        <div class="flex justify-between items-start">
+            <div class="p-3 bg-error-container text-error rounded-lg">
+                <span class="material-symbols-outlined">pending_actions</span>
+            </div>
+        </div>
+        <div class="mt-4">
+            <p class="text-label-sm text-outline uppercase tracking-wider">Due Today</p>
+            <h3 id="kpi-due-today" class="font-headline-md text-headline-md text-on-surface">@Model.Kpis.TotalDueToday.ToString("N2")</h3>
+        </div>
+    </div>
+
+    <!-- Revenue This Month -->
+    <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant flex flex-col justify-between min-h-[160px]">
+        <div class="flex justify-between items-start">
+            <div class="p-3 bg-secondary-container text-primary rounded-lg">
+                <span class="material-symbols-outlined">payments</span>
+            </div>
+        </div>
+        <div class="mt-4">
+            <p class="text-label-sm text-outline uppercase tracking-wider">Revenue This Month</p>
+            <h3 id="kpi-revenue-month" class="font-headline-md text-headline-md text-on-surface">@Model.Kpis.RevenueThisMonth.ToString("N2")</h3>
+        </div>
+    </div>
+
+    <!-- Outstanding Students -->
+    <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant flex flex-col justify-between min-h-[160px]">
+        <div class="flex justify-between items-start">
+            <div class="p-3 bg-tertiary-fixed text-tertiary rounded-lg">
+                <span class="material-symbols-outlined">calendar_today</span>
+            </div>
+        </div>
+        <div class="mt-4">
+            <p class="text-label-sm text-outline uppercase tracking-wider">Outstanding Students</p>
+            <h3 id="kpi-outstanding" class="font-headline-md text-headline-md text-on-surface">@Model.Kpis.OutstandingStudentsCount</h3>
+        </div>
+    </div>
+
+    <!-- Collection Rate -->
+    <div class="bg-primary p-6 rounded-xl shadow-lg flex flex-col justify-between min-h-[160px] text-white">
+        <div class="flex justify-between items-start">
+            <p class="font-label-md opacity-80">Collection Efficiency</p>
+            <span class="material-symbols-outlined">verified</span>
+        </div>
+        <div class="space-y-2 mt-4">
+            <h3 id="kpi-collection-rate" class="font-headline-md text-headline-md">@Model.Kpis.CollectionRatePercent.ToString("F1")%</h3>
+            <div class="w-full bg-white/20 h-2 rounded-full overflow-hidden">
+                <div class="bg-white h-full transition-all duration-500" id="kpi-collection-bar" style="width: @Model.Kpis.CollectionRatePercent%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transaction History Section -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden mb-gutter">
+    <div class="p-6 border-b border-outline-variant flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <h4 class="font-headline-sm text-headline-sm text-on-surface">Transaction History</h4>
+        <div class="flex flex-wrap items-center gap-3">
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-lg border border-outline-variant">
+                <span class="material-symbols-outlined text-[18px] text-outline">filter_list</span>
+                <select id="status-filter" onchange="fetchTransactions(1)"
+                        class="bg-transparent border-none text-label-md text-on-surface focus:ring-0 cursor-pointer">
+                    <option value="">All Transactions</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Pending">Pending</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-surface-container-low border-b border-outline-variant">
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Student</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Course</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider text-right">Amount</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Method</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Status</th>
+                </tr>
+            </thead>
+            <tbody id="tx-tbody" class="divide-y divide-outline-variant">
+                <!-- Populated via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    <div class="p-4 bg-surface-container-low flex items-center justify-between border-t border-outline-variant">
+        <p id="tx-info" class="text-body-sm text-outline">Loading...</p>
+        <div id="tx-pagination" class="flex gap-2">
+        </div>
+    </div>
+</div>
+
+<!-- Record Payment Modal -->
+<div id="paymentModal" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-on-background/40 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-surface-container-lowest rounded-2xl shadow-2xl overflow-hidden border border-outline-variant">
+        <div class="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Record New Payment</h3>
+            <button class="p-1 hover:bg-surface-container-high rounded-full" onclick="closeModal()">
+                <span class="material-symbols-outlined text-outline">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-stack-md">
+            <!-- Error display -->
+            <div id="payment-error" class="hidden text-error text-body-sm p-3 bg-error-container rounded-lg"></div>
+
+            <!-- Student Search -->
+            <div class="space-y-2">
+                <label class="font-label-md text-on-surface">Search Student</label>
+                <div class="relative">
+                    <input id="student-search"
+                           type="text"
+                           autocomplete="off"
+                           placeholder="Type student name..."
+                           class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+                    <div id="student-suggestions"
+                         class="hidden absolute left-0 right-0 top-full mt-1 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg z-50 max-h-48 overflow-y-auto">
+                    </div>
+                </div>
+                <input type="hidden" id="selected-student-id" />
+                <p id="selected-student-name" class="text-body-sm text-primary font-label-md hidden"></p>
+            </div>
+
+            <!-- Course Payment Select -->
+            <div id="course-payment-section" class="space-y-2 hidden">
+                <label class="font-label-md text-on-surface">Select Course</label>
+                <select id="payment-scp-id"
+                        class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary appearance-none outline-none">
+                    <option value="">Select a course...</option>
+                </select>
+                <div id="course-balance-info" class="text-body-sm text-on-surface-variant p-2 bg-surface-container-low rounded-lg hidden">
+                </div>
+            </div>
+
+            <!-- Amount & Method -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="font-label-md text-on-surface">Amount</label>
+                    <input id="payment-amount"
+                           type="number"
+                           step="0.01"
+                           min="0.01"
+                           placeholder="0.00"
+                           class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+                </div>
+                <div class="space-y-2">
+                    <label class="font-label-md text-on-surface">Method</label>
+                    <select id="payment-method"
+                            class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary appearance-none outline-none">
+                        <option value="Cash">Cash</option>
+                        <option value="Card">Card</option>
+                        <option value="Transfer">Transfer</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="space-y-2">
+                <label class="font-label-md text-on-surface">Notes (optional)</label>
+                <input id="payment-notes"
+                       type="text"
+                       placeholder="Add a note..."
+                       class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+            </div>
+
+            <!-- Actions -->
+            <div class="pt-4 flex gap-3">
+                <button onclick="closeModal()"
+                        type="button"
+                        class="flex-1 py-3 border border-outline text-on-surface font-label-md rounded-lg hover:bg-surface-container-low transition-colors">
+                    Cancel
+                </button>
+                <button onclick="submitPayment()"
+                        type="button"
+                        class="flex-1 py-3 bg-primary-container text-white font-label-md rounded-lg shadow-lg hover:bg-primary transition-all active:scale-95">
+                    Confirm Payment
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // =========================================
+        // Anti-Forgery Token Helper
+        // =========================================
+        function getAntiForgeryToken() {
+            const tokenField = document.querySelector('input[name="__RequestVerificationToken"]');
+            return tokenField ? tokenField.value : '';
+        }
+
+        // =========================================
+        // KPI Refresh
+        // =========================================
+        async function loadKpis() {
+            try {
+                const res = await fetch('/Payment/KPIs');
+                const data = await res.json();
+                document.getElementById('kpi-due-today').textContent = data.totalDueToday.toFixed(2);
+                document.getElementById('kpi-revenue-month').textContent = data.revenueThisMonth.toFixed(2);
+                document.getElementById('kpi-outstanding').textContent = data.outstandingStudentsCount;
+                document.getElementById('kpi-collection-rate').textContent = data.collectionRatePercent.toFixed(1) + '%';
+                document.getElementById('kpi-collection-bar').style.width = data.collectionRatePercent + '%';
+            } catch (e) {
+                console.error('Failed to load KPIs', e);
+            }
+        }
+
+        // =========================================
+        // Transaction Table
+        // =========================================
+        let currentPage = 1;
+
+        async function fetchTransactions(page) {
+            currentPage = page;
+            const status = document.getElementById('status-filter').value;
+            try {
+                const res = await fetch(`/Payment/Transactions?page=${page}&paymentStatus=${status}`);
+                const data = await res.json();
+                renderTransactionTable(data.items);
+                renderPagination(data.totalPages, page, data.totalCount);
+            } catch (e) {
+                console.error('Failed to fetch transactions', e);
+            }
+        }
+
+        function renderTransactionTable(items) {
+            const tbody = document.getElementById('tx-tbody');
+            tbody.innerHTML = '';
+
+            if (!items || items.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center">
+                            <span class="material-symbols-outlined text-outline text-4xl mb-2 block">receipt_long</span>
+                            <p class="text-headline-sm font-headline-sm text-on-surface">No transactions found</p>
+                            <p class="text-body-sm text-outline">Payments will appear here once recorded.</p>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            items.forEach(t => {
+                const initials = t.studentName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-surface-container-low transition-colors group';
+                row.innerHTML = `
+                    <td class="px-6 py-4">
+                        <p class="font-body-sm text-on-surface">${new Date(t.paymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                        <p class="text-[10px] text-outline uppercase">${new Date(t.paymentDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">${initials}</div>
+                            <div>
+                                <p class="font-label-md text-on-surface">${t.studentName}</p>
+                                <p class="text-body-sm text-outline">${t.courseName}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-body-sm text-on-surface-variant">${t.courseName}</td>
+                    <td class="px-6 py-4 text-right">
+                        <p class="font-mono font-bold text-on-surface">${t.amount.toFixed(2)}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px]">${t.paymentMethod === 'Card' ? 'credit_card' : t.paymentMethod === 'Transfer' ? 'account_balance' : 'payments'}</span>
+                            <span class="text-body-sm">${t.paymentMethod}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="${t.isPaid ? 'badge-green' : 'badge-orange'}">${t.isPaid ? 'Paid' : 'Pending'}</span>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderPagination(totalPages, currentPage, totalCount) {
+            const info = document.getElementById('tx-info');
+            info.textContent = `Showing page ${currentPage} of ${totalPages} (${totalCount} total)`;
+
+            const pagination = document.getElementById('tx-pagination');
+            pagination.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            const prevBtn = document.createElement('button');
+            prevBtn.textContent = 'Previous';
+            prevBtn.className = 'px-3 py-1 border border-outline-variant rounded hover:bg-surface transition-colors disabled:opacity-50';
+            prevBtn.disabled = currentPage <= 1;
+            prevBtn.onclick = () => fetchTransactions(currentPage - 1);
+            pagination.appendChild(prevBtn);
+
+            const nextBtn = document.createElement('button');
+            nextBtn.textContent = 'Next';
+            nextBtn.className = 'px-3 py-1 bg-primary text-white rounded hover:bg-primary/90 transition-colors disabled:opacity-50';
+            nextBtn.disabled = currentPage >= totalPages;
+            nextBtn.onclick = () => fetchTransactions(currentPage + 1);
+            pagination.appendChild(nextBtn);
+        }
+
+        // =========================================
+        // Payment Modal
+        // =========================================
+        function openPaymentModal() {
+            document.getElementById('paymentModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            resetPaymentForm();
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function resetPaymentForm() {
+            document.getElementById('student-search').value = '';
+            document.getElementById('selected-student-id').value = '';
+            document.getElementById('selected-student-name').classList.add('hidden');
+            document.getElementById('student-suggestions').classList.add('hidden');
+            document.getElementById('course-payment-section').classList.add('hidden');
+            document.getElementById('course-balance-info').classList.add('hidden');
+            document.getElementById('payment-amount').value = '';
+            document.getElementById('payment-notes').value = '';
+            document.getElementById('payment-method').value = 'Cash';
+            const errorEl = document.getElementById('payment-error');
+            errorEl.textContent = '';
+            errorEl.classList.add('hidden');
+        }
+
+        // =========================================
+        // Student Search with Debounce
+        // =========================================
+        let searchTimeout;
+
+        document.getElementById('student-search').addEventListener('input', function () {
+            clearTimeout(searchTimeout);
+            const q = this.value.trim();
+            if (q.length < 2) {
+                document.getElementById('student-suggestions').classList.add('hidden');
+                return;
+            }
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const res = await fetch(`/Student/Search?q=${encodeURIComponent(q)}`);
+                    const students = await res.json();
+                    renderStudentSuggestions(students);
+                } catch (e) {
+                    console.error('Search failed', e);
+                }
+            }, 300);
+        });
+
+        function renderStudentSuggestions(students) {
+            const container = document.getElementById('student-suggestions');
+            container.innerHTML = '';
+
+            if (!students || students.length === 0) {
+                container.innerHTML = '<div class="p-3 text-body-sm text-outline">No students found</div>';
+                container.classList.remove('hidden');
+                return;
+            }
+
+            students.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'student-suggestion flex items-center gap-3';
+                const initials = s.fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                div.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">${initials}</div>
+                    <div>
+                        <p class="font-label-md text-on-surface">${s.fullName}</p>
+                        <p class="text-body-sm text-outline">${s.gradeLevelName || ''}</p>
+                    </div>
+                `;
+                div.onclick = () => selectStudent(s);
+                container.appendChild(div);
+            });
+
+            container.classList.remove('hidden');
+        }
+
+        async function selectStudent(student) {
+            document.getElementById('selected-student-id').value = student.studentProfileId;
+            document.getElementById('student-search').value = student.fullName;
+            document.getElementById('selected-student-name').textContent = `Selected: ${student.fullName}`;
+            document.getElementById('selected-student-name').classList.remove('hidden');
+            document.getElementById('student-suggestions').classList.add('hidden');
+
+            // Fetch financial summary to populate course payments
+            try {
+                const res = await fetch(`/Payment/StudentSummary/${student.studentProfileId}`);
+                const summary = await res.json();
+                populateCoursePayments(summary);
+            } catch (e) {
+                console.error('Failed to load student summary', e);
+            }
+        }
+
+        function populateCoursePayments(summary) {
+            const section = document.getElementById('course-payment-section');
+            const select = document.getElementById('payment-scp-id');
+            select.innerHTML = '<option value="">Select a course...</option>';
+
+            if (summary.coursePayments && summary.coursePayments.length > 0) {
+                summary.coursePayments.forEach(cp => {
+                    if (!cp.isPaid) {
+                        const opt = document.createElement('option');
+                        opt.value = cp.studentCoursePaymentId;
+                        opt.textContent = `${cp.courseName} — Remaining: ${cp.remainingAmount.toFixed(2)}`;
+                        opt.dataset.remaining = cp.remainingAmount;
+                        select.appendChild(opt);
+                    }
+                });
+            }
+
+            section.classList.remove('hidden');
+
+            // Show balance info on selection change
+            select.onchange = function () {
+                const balanceInfo = document.getElementById('course-balance-info');
+                const selected = this.selectedOptions[0];
+                if (selected && selected.dataset.remaining) {
+                    balanceInfo.textContent = `Remaining balance: ${parseFloat(selected.dataset.remaining).toFixed(2)}`;
+                    balanceInfo.classList.remove('hidden');
+                } else {
+                    balanceInfo.classList.add('hidden');
+                }
+            };
+        }
+
+        // =========================================
+        // Submit Payment
+        // =========================================
+        async function submitPayment() {
+            const scpId = document.getElementById('payment-scp-id').value;
+            const amount = document.getElementById('payment-amount').value;
+            const method = document.getElementById('payment-method').value;
+            const notes = document.getElementById('payment-notes').value;
+            const errorEl = document.getElementById('payment-error');
+
+            if (!scpId || !amount) {
+                errorEl.textContent = 'Please select a course and enter an amount.';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            const payload = {
+                studentCoursePaymentId: parseInt(scpId),
+                amount: parseFloat(amount),
+                paymentMethod: method,
+                notes: notes || null
+            };
+
+            try {
+                const res = await fetch('/Payment/RecordCourse', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': getAntiForgeryToken()
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    closeModal();
+                    loadKpis();
+                    fetchTransactions(1);
+                } else {
+                    errorEl.textContent = data.error || 'Payment failed.';
+                    errorEl.classList.remove('hidden');
+                }
+            } catch (e) {
+                errorEl.textContent = 'An error occurred while processing the payment.';
+                errorEl.classList.remove('hidden');
+                console.error(e);
+            }
+        }
+
+        // =========================================
+        // Escape key for modal
+        // =========================================
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('paymentModal');
+                if (!modal.classList.contains('hidden')) closeModal();
+            }
+        });
+
+        // =========================================
+        // Initialize on page load
+        // =========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadKpis();
+            fetchTransactions(1);
+        });
+    </script>
+    @Html.AntiForgeryToken()
+}

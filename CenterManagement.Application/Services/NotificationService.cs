@@ -2,61 +2,96 @@ using CenterManagement.Application.DTOs.Notification;
 using CenterManagement.Application.Interfaces;
 using CenterManagement.Domain.Entities;
 using CenterManagement.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace CenterManagement.Application.Services
 {
     /// <summary>
-    /// Phase 1 stub implementation. Phase 6 replaces this with the full implementation.
+    /// Phase 6 full implementation — replaces the Phase 1 stub.
     /// </summary>
     public class NotificationService : INotificationService
     {
-        private readonly CenterManagementDbContext _context;
+        private readonly CenterManagementDbContext _db;
 
-        public NotificationService(CenterManagementDbContext context)
+        public NotificationService(CenterManagementDbContext db)
         {
-            _context = context;
+            _db = db;
         }
 
         public async Task SendToUserAsync(string userId, string title, string message)
         {
-            var notification = new Notification
+            _db.Notifications.Add(new Notification
             {
                 UserId = userId,
                 Title = title,
                 Message = message,
-                IsRead = false,
                 SentAt = DateTime.UtcNow,
+                IsRead = false,
                 CreatedAt = DateTime.UtcNow
-            };
-
-            _context.Notifications.Add(notification);
-            await _context.SaveChangesAsync();
+            });
+            await _db.SaveChangesAsync();
         }
 
-        public Task SendToGroupAsync(int groupId, string title, string message)
+        public async Task SendToGroupAsync(int groupId, string title, string message)
         {
-            Console.WriteLine($"[NotificationStub] SendToGroup({groupId}, \"{title}\", \"{message}\")");
-            return Task.CompletedTask;
+            var userIds = await _db.Enrollments
+                .Where(e => e.GroupId == groupId && e.IsActive)
+                .Select(e => e.StudentProfile.UserId)
+                .Distinct()
+                .ToListAsync();
+
+            // Single batch — do NOT call SaveChangesAsync in a loop
+            var notifications = userIds.Select(uid => new Notification
+            {
+                UserId = uid,
+                Title = title,
+                Message = message,
+                SentAt = DateTime.UtcNow,
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+
+            await _db.Notifications.AddRangeAsync(notifications);
+            await _db.SaveChangesAsync();
         }
 
-        public Task<int> GetUnreadCountAsync(string userId)
+        public async Task<int> GetUnreadCountAsync(string userId)
+            => await _db.Notifications.CountAsync(n => n.UserId == userId && !n.IsRead);
+
+        public async Task<List<NotificationDto>> GetNotificationsAsync(
+            string userId, int page, int pageSize)
+            => await _db.Notifications
+                .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.SentAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(n => new NotificationDto
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Message = n.Message,
+                    IsRead = n.IsRead,
+                    SentAt = n.SentAt
+                })
+                .ToListAsync();
+
+        public async Task MarkReadAsync(int notificationId, string userId)
         {
-            return Task.FromResult(0);
+            var n = await _db.Notifications
+                .FirstOrDefaultAsync(x => x.Id == notificationId && x.UserId == userId);
+            if (n is null) return;
+            n.IsRead = true;
+            n.UpdatedAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
         }
 
-        public Task<List<NotificationDto>> GetNotificationsAsync(string userId, int page, int pageSize)
+        public async Task MarkAllReadAsync(string userId)
         {
-            return Task.FromResult(new List<NotificationDto>());
-        }
-
-        public Task MarkReadAsync(int notificationId, string userId)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task MarkAllReadAsync(string userId)
-        {
-            return Task.CompletedTask;
+            await _db.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(n => n.IsRead, true)
+                    .SetProperty(n => n.UpdatedAt, DateTime.UtcNow));
         }
     }
 }

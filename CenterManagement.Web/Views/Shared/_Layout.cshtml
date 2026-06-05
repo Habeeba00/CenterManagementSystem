@@ -155,6 +155,12 @@
             <span class="material-symbols-outlined">query_stats</span>
             <span class="font-label-md text-label-md">Analytics</span>
         </a>
+        <a asp-controller="AuditLog" asp-action="Index"
+           data-nav-controller="AuditLog"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out @(ctrl == "AuditLog" ? "bg-white/10 text-white border-l-4 border-primary" : "text-secondary-fixed-dim hover:text-white hover:bg-white/5")">
+            <span class="material-symbols-outlined">history</span>
+            <span class="font-label-md text-label-md">Audit Log</span>
+        </a>
     </nav>
     <div class="mt-auto border-t border-white/10 pt-4 space-y-2">
         <form asp-action="Logout" asp-controller="Auth" method="post">
@@ -176,10 +182,23 @@
         </div>
     </div>
     <div class="flex items-center gap-4">
-        <button id="notif-bell" class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
-            <span class="material-symbols-outlined">notifications</span>
-            <span id="notif-count" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-error text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">0</span>
-        </button>
+        <!-- Notification bell + dropdown -->
+        <div class="relative">
+            <button id="notif-bell" onclick="toggleNotifDropdown()"
+                    class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
+                <span class="material-symbols-outlined">notifications</span>
+                <span id="notif-count"
+                      class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-error text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">0</span>
+            </button>
+            <div id="notif-dropdown"
+                 class="hidden absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-lg border border-outline-variant z-50 max-h-96 overflow-y-auto">
+                <div class="flex items-center justify-between p-3 border-b border-outline-variant">
+                    <span class="font-label-md text-label-md text-on-surface">Notifications</span>
+                    <button onclick="markAllRead()" class="text-primary text-label-sm hover:underline">Mark all read</button>
+                </div>
+                <ul id="notif-list" class="divide-y divide-outline-variant"></ul>
+            </div>
+        </div>
         <div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
         <div class="flex items-center gap-3 pl-2">
             <div class="text-right hidden sm:block">
@@ -198,6 +217,64 @@
 </main>
 
 <script src="~/js/site.js"></script>
+<script>
+    // --- Notification Dropdown ---
+    async function toggleNotifDropdown() {
+        const dropdown = document.getElementById('notif-dropdown');
+        const isHidden = dropdown.classList.contains('hidden');
+        dropdown.classList.toggle('hidden');
+        if (isHidden) await fetchNotificationList();
+    }
+
+    async function fetchNotificationList() {
+        try {
+            const res = await fetch('/Notification/List?page=1');
+            const items = await res.json();
+            const list = document.getElementById('notif-list');
+            list.innerHTML = items.length === 0
+                ? '<li class="p-4 text-body-sm text-on-surface-variant text-center">No notifications</li>'
+                : items.map(n => `
+                    <li class="p-3 ${n.isRead ? '' : 'bg-surface-container-low'} hover:bg-surface-container transition-colors cursor-pointer"
+                        onclick="markRead(${n.id}, this)">
+                        <p class="font-label-sm text-label-sm text-on-surface">${n.title}</p>
+                        <p class="text-body-sm text-on-surface-variant line-clamp-2 mt-0.5">${n.message}</p>
+                        <p class="text-label-sm text-on-surface-variant mt-1 opacity-60">${new Date(n.sentAt).toLocaleString()}</p>
+                    </li>`
+                ).join('');
+        } catch (_) { /* silent */ }
+    }
+
+    async function markRead(id, el) {
+        await fetch('/Notification/MarkRead/' + id, {
+            method: 'POST',
+            headers: { 'RequestVerificationToken': getAntiForgeryToken() }
+        });
+        el.classList.remove('bg-surface-container-low');
+        pollNotifications();
+    }
+
+    async function markAllRead() {
+        await fetch('/Notification/MarkAllRead', {
+            method: 'POST',
+            headers: { 'RequestVerificationToken': getAntiForgeryToken() }
+        });
+        document.getElementById('notif-dropdown').classList.add('hidden');
+        pollNotifications();
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function (e) {
+        const dropdown = document.getElementById('notif-dropdown');
+        const bell = document.getElementById('notif-bell');
+        if (dropdown && bell && !dropdown.contains(e.target) && !bell.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    // Initial poll on page load
+    document.addEventListener('DOMContentLoaded', pollNotifications);
+</script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

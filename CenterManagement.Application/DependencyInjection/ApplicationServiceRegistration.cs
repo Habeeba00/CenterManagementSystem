@@ -18,7 +18,10 @@ namespace CenterManagement.Application.DependencyInjection
             services.AddScoped<IInstructorService, InstructorService>();
             services.AddScoped<IAttendanceService, AttendanceService>();
             services.AddScoped<IQrService, QrService>();
-            // Each subsequent phase appends their own registrations here
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IAnalyticsService, AnalyticsService>();
+            // NotificationService is already registered — implementation replaced in-place for Phase 6
             return services;
         }
     }

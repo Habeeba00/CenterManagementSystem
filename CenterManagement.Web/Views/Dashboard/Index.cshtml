@@ -3,14 +3,252 @@
     Layout = "_Layout";
 }
 
-<div class="bg-white p-8 rounded-xl card-shadow">
-    <div class="flex items-center gap-3 mb-4">
-        <div class="p-3 bg-primary-fixed rounded-lg text-primary">
-            <span class="material-symbols-outlined">dashboard</span>
-        </div>
-        <h1 class="text-headline-md font-headline-md text-on-surface">Dashboard</h1>
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+    <div>
+        <h1 class="text-headline-lg font-headline-lg text-on-surface">Dashboard</h1>
+        <p class="text-body-md text-on-surface-variant mt-1">Welcome back! Here's what's happening today.</p>
     </div>
-    <p class="text-body-md font-body-md text-on-surface-variant">
-        Dashboard — placeholder. Phase 6 replaces this view.
-    </p>
+    <div class="mt-4 sm:mt-0 flex gap-3">
+        <span id="current-time" class="text-body-sm text-on-surface-variant bg-surface-container-low px-3 py-1.5 rounded-lg"></span>
+    </div>
 </div>
+
+<!-- KPI Cards Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Students -->
+    <div class="bg-white border border-outline-variant p-6 rounded-xl card-shadow hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+            <div class="p-3 bg-primary-container/10 rounded-lg">
+                <span class="material-symbols-outlined text-primary">group</span>
+            </div>
+        </div>
+        <p class="text-body-sm text-on-surface-variant">Total Students</p>
+        <p id="kpi-total-students" class="text-headline-md font-headline-md text-on-surface mt-1">—</p>
+        <p class="text-label-sm text-primary mt-2">
+            <span id="kpi-new-students" class="font-semibold">—</span> new this month
+        </p>
+    </div>
+
+    <!-- Active Sessions -->
+    <div class="bg-white border border-outline-variant p-6 rounded-xl card-shadow hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+            <div class="p-3 bg-green-50 rounded-lg">
+                <span class="material-symbols-outlined text-green-600">play_circle</span>
+            </div>
+        </div>
+        <p class="text-body-sm text-on-surface-variant">Active Sessions</p>
+        <p id="kpi-active-sessions" class="text-headline-md font-headline-md text-on-surface mt-1">—</p>
+        <p class="text-label-sm text-green-600 mt-2">happening right now</p>
+    </div>
+
+    <!-- Attendance Rate -->
+    <div class="bg-white border border-outline-variant p-6 rounded-xl card-shadow hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+            <div class="p-3 bg-blue-50 rounded-lg">
+                <span class="material-symbols-outlined text-blue-600">fact_check</span>
+            </div>
+        </div>
+        <p class="text-body-sm text-on-surface-variant">Attendance Rate (7d)</p>
+        <p id="kpi-attendance-rate" class="text-headline-md font-headline-md text-on-surface mt-1">—</p>
+        <p class="text-label-sm text-blue-600 mt-2">last 7 days average</p>
+    </div>
+
+    <!-- Revenue Today -->
+    <div class="bg-white border border-outline-variant p-6 rounded-xl card-shadow hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+            <div class="p-3 bg-amber-50 rounded-lg">
+                <span class="material-symbols-outlined text-amber-600">payments</span>
+            </div>
+        </div>
+        <p class="text-body-sm text-on-surface-variant">Revenue Today</p>
+        <p id="kpi-revenue-today" class="text-headline-md font-headline-md text-on-surface mt-1">—</p>
+        <p class="text-label-sm text-amber-600 mt-2">EGP collected today</p>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="bg-white border border-outline-variant p-6 rounded-xl card-shadow mb-8">
+    <h2 class="text-headline-sm font-headline-sm text-on-surface mb-4">Quick Actions</h2>
+    <div class="flex flex-wrap gap-3">
+        <a asp-controller="Session" asp-action="Index"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-container text-white rounded-lg hover:opacity-90 transition-opacity font-label-md text-label-md">
+            <span class="material-symbols-outlined text-[20px]">qr_code_scanner</span> Quick QR Scan
+        </a>
+        <a asp-controller="Student" asp-action="Create"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-surface-container-low border border-outline-variant text-on-surface rounded-lg hover:bg-surface-container transition-colors font-label-md text-label-md">
+            <span class="material-symbols-outlined text-[20px]">person_add</span> New Student
+        </a>
+        <a asp-controller="Payment" asp-action="Index"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-surface-container-low border border-outline-variant text-on-surface rounded-lg hover:bg-surface-container transition-colors font-label-md text-label-md">
+            <span class="material-symbols-outlined text-[20px]">payments</span> Record Payment
+        </a>
+    </div>
+</div>
+
+<!-- Active Sessions Grid -->
+<div class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-headline-sm font-headline-sm text-on-surface">Active Sessions Now</h2>
+        <span id="session-refresh-indicator" class="text-label-sm text-on-surface-variant">Auto-refreshes every 60s</span>
+    </div>
+    <div id="active-sessions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="col-span-full text-center py-12 text-on-surface-variant">
+            <span class="material-symbols-outlined text-4xl mb-2 block">hourglass_top</span>
+            <p class="text-body-md">Loading active sessions...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Today's Schedule -->
+<div>
+    <h2 class="text-headline-sm font-headline-sm text-on-surface mb-4">Today's Full Schedule</h2>
+    <div class="bg-white border border-outline-variant rounded-xl card-shadow overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-surface-container-low border-b border-outline-variant">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Time</th>
+                        <th class="px-6 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Course</th>
+                        <th class="px-6 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Group</th>
+                        <th class="px-6 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Instructor</th>
+                        <th class="px-6 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Enrolled</th>
+                        <th class="px-6 py-3 text-left text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="today-schedule-tbody" class="divide-y divide-outline-variant">
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-on-surface-variant text-body-sm">Loading schedule...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // --- KPIs ---
+    async function loadKpis() {
+        try {
+            const res = await fetch('/Dashboard/Kpis');
+            const d = await res.json();
+            document.getElementById('kpi-total-students').textContent = d.totalStudents;
+            document.getElementById('kpi-active-sessions').textContent = d.activeSessionsNow;
+            document.getElementById('kpi-attendance-rate').textContent = d.attendanceRateLast7Days.toFixed(1) + '%';
+            document.getElementById('kpi-revenue-today').textContent = d.revenueTodayAmount.toFixed(2);
+            document.getElementById('kpi-new-students').textContent = '+' + d.newStudentsThisMonth;
+        } catch (e) {
+            console.error('Failed to load KPIs:', e);
+        }
+    }
+
+    // --- Active Sessions ---
+    async function loadActiveSessions() {
+        try {
+            const res = await fetch('/Dashboard/ActiveSessions');
+            const sessions = await res.json();
+            const grid = document.getElementById('active-sessions-grid');
+            if (sessions.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-4xl mb-2 block opacity-50">event_busy</span>
+                        <p class="text-body-md">No active sessions right now.</p>
+                    </div>`;
+            } else {
+                grid.innerHTML = sessions.map(s => `
+                    <div class="bg-white border border-outline-variant p-5 rounded-xl card-shadow hover:shadow-lg transition-shadow">
+                        <div class="flex items-start justify-between mb-3">
+                            <h4 class="text-headline-sm font-headline-sm text-on-surface">${s.courseTitle}</h4>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-green-100 text-green-700 text-label-sm font-label-sm rounded-full">
+                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                                ACTIVE
+                            </span>
+                        </div>
+                        <div class="space-y-1.5 mb-4">
+                            <p class="text-body-sm text-on-surface-variant flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[16px]">person</span> ${s.instructorName}
+                            </p>
+                            <p class="text-body-sm text-on-surface-variant flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[16px]">groups</span> ${s.groupName} · ${s.gradeLevelName}
+                            </p>
+                            <p class="text-body-sm text-on-surface-variant flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[16px]">schedule</span> ${formatTime(s.startTime)} – ${formatTime(s.endTime)}
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-body-sm text-on-surface">
+                                <span class="font-semibold text-primary">${s.presentCount}</span> / ${s.totalEnrolled} present
+                            </span>
+                            <div class="w-24 h-2 bg-surface-container-low rounded-full overflow-hidden">
+                                <div class="h-full bg-primary rounded-full transition-all" style="width: ${s.totalEnrolled > 0 ? (s.presentCount / s.totalEnrolled * 100) : 0}%"></div>
+                            </div>
+                        </div>
+                        <a href="/Session/Detail/${s.sessionId}"
+                           class="block text-center py-2.5 bg-primary-container text-white rounded-lg text-label-sm font-label-sm hover:opacity-90 transition-opacity">
+                            Manage Attendance
+                        </a>
+                    </div>`
+                ).join('');
+            }
+        } catch (e) {
+            console.error('Failed to load active sessions:', e);
+        }
+    }
+
+    // --- Today's Schedule ---
+    async function loadTodaySchedule() {
+        try {
+            const res = await fetch('/Dashboard/TodaySchedule');
+            const schedule = await res.json();
+            const tbody = document.getElementById('today-schedule-tbody');
+            if (schedule.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-12 text-center text-on-surface-variant text-body-sm">No sessions scheduled for today.</td></tr>';
+            } else {
+                tbody.innerHTML = schedule.map(s => `
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                        <td class="px-6 py-4 text-body-sm text-on-surface whitespace-nowrap">${formatTime(s.startTime)} – ${formatTime(s.endTime)}</td>
+                        <td class="px-6 py-4 text-body-sm font-medium text-on-surface">${s.courseTitle}</td>
+                        <td class="px-6 py-4 text-body-sm text-on-surface-variant">${s.groupName}</td>
+                        <td class="px-6 py-4 text-body-sm text-on-surface-variant">${s.instructorName}</td>
+                        <td class="px-6 py-4 text-body-sm text-on-surface-variant">${s.enrolledCount}</td>
+                        <td class="px-6 py-4">
+                            ${s.isCanceled
+                                ? '<span class="px-2.5 py-0.5 bg-red-100 text-red-700 text-label-sm rounded-full">Canceled</span>'
+                                : '<span class="px-2.5 py-0.5 bg-green-100 text-green-700 text-label-sm rounded-full">Scheduled</span>'}
+                        </td>
+                    </tr>`
+                ).join('');
+            }
+        } catch (e) {
+            console.error('Failed to load schedule:', e);
+        }
+    }
+
+    // --- Helpers ---
+    function formatTime(timespan) {
+        const parts = timespan.split(':');
+        const h = parseInt(parts[0]);
+        const m = parts[1];
+        return `${h % 12 || 12}:${m} ${h < 12 ? 'AM' : 'PM'}`;
+    }
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('current-time').textContent = now.toLocaleString('en-US', {
+            weekday: 'short', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+
+    // --- Init ---
+    document.addEventListener('DOMContentLoaded', () => {
+        updateClock();
+        setInterval(updateClock, 60000);
+        loadKpis();
+        loadActiveSessions();
+        loadTodaySchedule();
+        setInterval(loadActiveSessions, 60000);
+    });
+</script>
+}

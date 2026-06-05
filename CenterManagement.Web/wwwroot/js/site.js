@@ -31,3 +31,4 @@ async function pollNotifications() {
 }
 
 setInterval(pollNotifications, 60000);
+document.addEventListener('DOMContentLoaded', pollNotifications);
