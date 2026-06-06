@@ -33,14 +33,14 @@ namespace CenterManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ActiveSessions()
         {
-            var sessions = await _dashboardService.GetActiveSessionsAsync(DateTime.UtcNow);
+            var sessions = await _dashboardService.GetActiveSessionsAsync(DateTime.Now);
             return Json(sessions);
         }
 
         [HttpGet]
         public async Task<IActionResult> TodaySchedule()
         {
-            var schedule = await _dashboardService.GetTodayScheduleAsync(DateTime.UtcNow.Date);
+            var schedule = await _dashboardService.GetTodayScheduleAsync(DateTime.Now.Date);
             return Json(schedule);
         }
     }

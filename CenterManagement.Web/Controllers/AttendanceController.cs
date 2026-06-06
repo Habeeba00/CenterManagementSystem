@@ -23,7 +23,7 @@ public class AttendanceController : Controller
     {
         try
         {
-            var result = await _attendanceService.ProcessScanAsync(req.QrCode, DateTime.UtcNow);
+            var result = await _attendanceService.ProcessScanAsync(req.QrCode, DateTime.Now);
             return Json(result);
         }
         catch (Exception ex)
