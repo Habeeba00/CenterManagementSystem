@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace CenterManagement.Web.ViewModels.Group
@@ -16,7 +17,9 @@ namespace CenterManagement.Web.ViewModels.Group
         
         public bool IsActive { get; set; } = true;
 
+        [ValidateNever]
         public SelectList CourseSelectList { get; set; } = null!;
+        [ValidateNever]
         public SelectList InstructorSelectList { get; set; } = null!;
     }
 }

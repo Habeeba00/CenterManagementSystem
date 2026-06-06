@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace CenterManagement.Web.ViewModels.Course
@@ -18,7 +19,9 @@ namespace CenterManagement.Web.ViewModels.Course
         [Required(ErrorMessage = "Grade level is required.")]
         public int GradeLevelId { get; set; }
 
+        [ValidateNever]
         public SelectList SubjectSelectList { get; set; } = null!;
+        [ValidateNever]
         public SelectList GradeLevelSelectList { get; set; } = null!;
     }
 }

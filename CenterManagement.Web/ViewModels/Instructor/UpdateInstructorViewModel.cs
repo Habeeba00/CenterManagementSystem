@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
@@ -18,6 +19,7 @@ namespace CenterManagement.Web.ViewModels.Instructor
         
         public string? CurrentImagePath { get; set; }
 
+        [ValidateNever]
         public SelectList SubjectSelectList { get; set; } = null!;
     }
 }

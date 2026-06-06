@@ -131,6 +131,7 @@ namespace CenterManagement.Web.Controllers
             try
             {
                 var profile = await _studentService.GetStudentProfileAsync(id);
+                ViewBag.Courses = await GetCourseSelectList();
                 return View(profile);
             }
             catch (KeyNotFoundException)
@@ -419,6 +420,17 @@ namespace CenterManagement.Web.Controllers
             return new SelectList(
                 groups.Select(g => new { g.Id, Display = $"{g.Name} — {g.Course.Name}" }),
                 "Id", "Display");
+        }
+
+        private async Task<SelectList> GetCourseSelectList()
+        {
+            var courses = await _db.Courses
+                .Where(c => !c.IsDeleted)
+                .AsNoTracking()
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+
+            return new SelectList(courses, "Id", "Name");
         }
     }
 

@@ -141,6 +141,16 @@ namespace CenterManagement.Web.Controllers
             }
         }
 
+        // GET: /Course/Delete/{id}
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+            var course = await _db.Courses.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            if (course == null) return NotFound();
+            return View(course);
+        }
+
         // POST: /Course/Delete/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]

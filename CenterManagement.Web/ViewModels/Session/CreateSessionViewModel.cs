@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,6 +21,7 @@ namespace CenterManagement.Web.ViewModels.Session
         [DataType(DataType.Time)]
         public TimeSpan EndTime { get; set; }
 
+        [ValidateNever]
         public SelectList GroupSelectList { get; set; } = null!;
     }
 }

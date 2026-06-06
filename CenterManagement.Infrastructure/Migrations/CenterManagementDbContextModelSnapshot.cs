@@ -145,7 +145,7 @@ namespace CenterManagement.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AuditLogs");
+                    b.ToTable("AuditLogs", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.Course", b =>
@@ -185,7 +185,7 @@ namespace CenterManagement.Infrastructure.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.Enrollment", b =>
@@ -224,7 +224,7 @@ namespace CenterManagement.Infrastructure.Migrations
                     b.HasIndex("StudentProfileId", "GroupId")
                         .IsUnique();
 
-                    b.ToTable("Enrollments");
+                    b.ToTable("Enrollments", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.GradeLevel", b =>
@@ -253,7 +253,7 @@ namespace CenterManagement.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("GradeLevels");
+                    b.ToTable("GradeLevels", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.Group", b =>
@@ -292,7 +292,7 @@ namespace CenterManagement.Infrastructure.Migrations
 
                     b.HasIndex("InstructorProfileId");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Groups", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.InstructorAttendance", b =>
@@ -333,7 +333,7 @@ namespace CenterManagement.Infrastructure.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("InstructorAttendances");
+                    b.ToTable("InstructorAttendances", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.InstructorProfile", b =>
@@ -371,7 +371,7 @@ namespace CenterManagement.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("InstructorProfiles");
+                    b.ToTable("InstructorProfiles", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.Notification", b =>
@@ -415,7 +415,7 @@ namespace CenterManagement.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.PaymentTransaction", b =>
@@ -457,7 +457,7 @@ namespace CenterManagement.Infrastructure.Migrations
 
                     b.HasIndex("StudentCoursePaymentId");
 
-                    b.ToTable("PaymentTransactions");
+                    b.ToTable("PaymentTransactions", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.QrCodeLog", b =>
@@ -492,7 +492,7 @@ namespace CenterManagement.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QrCodeLogs");
+                    b.ToTable("QrCodeLogs", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.Session", b =>
@@ -536,7 +536,7 @@ namespace CenterManagement.Infrastructure.Migrations
 
                     b.HasIndex("SessionDate");
 
-                    b.ToTable("Sessions");
+                    b.ToTable("Sessions", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.SessionPayment", b =>
@@ -581,7 +581,7 @@ namespace CenterManagement.Infrastructure.Migrations
 
                     b.HasIndex("StudentProfileId");
 
-                    b.ToTable("SessionPayments");
+                    b.ToTable("SessionPayments", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.StudentAttendance", b =>
@@ -625,7 +625,7 @@ namespace CenterManagement.Infrastructure.Migrations
                     b.HasIndex("StudentProfileId", "SessionId")
                         .IsUnique();
 
-                    b.ToTable("StudentAttendances");
+                    b.ToTable("StudentAttendances", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.StudentCoursePayment", b =>
@@ -672,7 +672,7 @@ namespace CenterManagement.Infrastructure.Migrations
 
                     b.HasIndex("StudentProfileId");
 
-                    b.ToTable("StudentCoursePayments");
+                    b.ToTable("StudentCoursePayments", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.StudentProfile", b =>
@@ -710,7 +710,7 @@ namespace CenterManagement.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("StudentProfiles");
+                    b.ToTable("StudentProfiles", (string)null);
                 });
 
             modelBuilder.Entity("CenterManagement.Domain.Entities.Subject", b =>
@@ -739,7 +739,7 @@ namespace CenterManagement.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subjects", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

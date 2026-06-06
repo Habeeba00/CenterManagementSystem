@@ -215,6 +215,18 @@
                         </form>
                     </div>
                 </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-outline-variant text-center">
+                    <h3 class="text-headline-sm font-headline-sm text-on-surface mb-4">Student ID Card</h3>
+                    <div class="inline-block p-4 bg-white border-2 border-dashed border-outline-variant rounded-xl mb-3">
+                        <img src="/Attendance/GetQr/@Model.UserId" alt="Student QR Code" class="w-48 h-48 mx-auto" />
+                    </div>
+                    <p class="text-label-sm text-outline mb-2">Scan to track attendance</p>
+                    <div class="bg-surface-container-low p-2 rounded text-center">
+                        <p class="font-mono text-label-md text-on-surface select-all">@Model.UserId</p>
+                        <p class="text-[10px] text-outline uppercase mt-1">Manual Entry Code</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -330,7 +342,13 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-xl p-6 shadow-sm border border-outline-variant">
-                    <h3 class="text-headline-sm font-headline-sm text-on-surface mb-6">Course Payments</h3>
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-headline-sm font-headline-sm text-on-surface">Course Payments</h3>
+                        <button type="button" onclick="openAssignCourseModal()"
+                                class="px-4 py-2 bg-primary-container text-white rounded-lg text-label-md font-label-md hover:brightness-110 transition-all flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">add</span> Assign Course
+                        </button>
+                    </div>
                     @if (Model.CoursePayments.Any())
                     {
                         <div class="space-y-4">
@@ -434,10 +452,101 @@
             </div>
         }
     </div>
+    </div>
 </div>
+
+<!-- Assign Course Modal -->
+<div id="assignCourseModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center backdrop-blur-sm">
+    <div class="bg-surface rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all scale-95 opacity-0" id="assignCourseModalContent">
+        <div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+            <h3 class="text-headline-sm font-headline-sm text-on-surface">Assign Course Payment</h3>
+            <button type="button" onclick="closeAssignCourseModal()" class="text-on-surface-variant hover:text-on-surface transition-colors p-1 rounded-full hover:bg-surface-container">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1">Select Course</label>
+                    <div class="relative">
+                        <select id="modalCourseId" asp-items="ViewBag.Courses"
+                                class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md appearance-none focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all outline-none">
+                            <option disabled selected value="">-- Select Course --</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 flex gap-3">
+                <button type="button" onclick="closeAssignCourseModal()"
+                        class="flex-1 py-2.5 rounded-lg border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-low transition-colors">
+                    Cancel
+                </button>
+                <button type="button" onclick="submitAssignCourse()"
+                        class="flex-1 py-2.5 rounded-lg bg-primary-container text-white font-label-md shadow-sm hover:brightness-110 transition-all">
+                    Assign
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @section Scripts {
 <script>
+    const assignModal = document.getElementById('assignCourseModal');
+    const assignModalContent = document.getElementById('assignCourseModalContent');
+
+    function openAssignCourseModal() {
+        assignModal.classList.remove('hidden');
+        setTimeout(() => {
+            assignModalContent.classList.remove('scale-95', 'opacity-0');
+            assignModalContent.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+
+    function closeAssignCourseModal() {
+        assignModalContent.classList.remove('scale-100', 'opacity-100');
+        assignModalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            assignModal.classList.add('hidden');
+        }, 200);
+    }
+
+    async function submitAssignCourse() {
+        const courseId = document.getElementById('modalCourseId').value;
+        if (!courseId) {
+            alert('Please select a course.');
+            return;
+        }
+
+        const payload = {
+            StudentProfileId: @Model.StudentProfileId,
+            CourseId: parseInt(courseId)
+        };
+
+        try {
+            const response = await fetch('/Payment/CreateCourse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to assign course.');
+            }
+        } catch (error) {
+            console.error('Error assigning course:', error);
+            alert('An error occurred while assigning the course.');
+        }
+    }
+
     function switchTab(tabName) {
         // Update tab button styles
         document.querySelectorAll('.tab-btn').forEach(tab => {

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace CenterManagement.Web.ViewModels.Student
@@ -22,6 +23,7 @@ namespace CenterManagement.Web.ViewModels.Student
 
         public string? CurrentImagePath { get; set; }
 
+        [ValidateNever]
         public SelectList GradeLevelSelectList { get; set; } = null!;
     }
 }

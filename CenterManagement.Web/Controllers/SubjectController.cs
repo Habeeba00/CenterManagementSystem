@@ -1,0 +1,104 @@
+using CenterManagement.Domain.Entities;
+using CenterManagement.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace CenterManagement.Web.Controllers
+{
+    [Authorize(Roles = "Admin")]
+    public class SubjectController : Controller
+    {
+        private readonly CenterManagementDbContext _context;
+
+        public SubjectController(CenterManagementDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Subject
+        public async Task<IActionResult> Index()
+        {
+            var items = await _context.Subjects.OrderBy(x => x.Name).ToListAsync();
+            return View(items);
+        }
+
+        // GET: Subject/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Subject/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Name")] Subject subject)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(subject);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Subject created successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(subject);
+        }
+
+        // GET: Subject/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var subject = await _context.Subjects.FindAsync(id);
+            if (subject == null) return NotFound();
+
+            return View(subject);
+        }
+
+        // POST: Subject/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Subject subject)
+        {
+            if (id != subject.Id) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(subject);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = "Subject updated successfully.";
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SubjectExists(subject.Id)) return NotFound();
+                    else throw;
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(subject);
+        }
+
+        // POST: Subject/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var subject = await _context.Subjects.FindAsync(id);
+            if (subject != null)
+            {
+                subject.IsDeleted = true;
+                _context.Update(subject);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Subject deleted successfully.";
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool SubjectExists(int id)
+        {
+            return _context.Subjects.Any(e => e.Id == id);
+        }
+    }
+}
