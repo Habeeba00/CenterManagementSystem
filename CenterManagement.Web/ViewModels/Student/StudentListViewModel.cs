@@ -1,4 +1,5 @@
 using CenterManagement.Application.DTOs.Student;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CenterManagement.Web.ViewModels.Student
@@ -14,7 +15,9 @@ namespace CenterManagement.Web.ViewModels.Student
         public int? GradeLevelId { get; set; }
         public int? SubjectId { get; set; }
         public string? PaymentStatusFilter { get; set; }
+        [ValidateNever]
         public SelectList GradeLevelSelectList { get; set; } = null!;
+        [ValidateNever]
         public SelectList SubjectSelectList { get; set; } = null!;
     }
 }

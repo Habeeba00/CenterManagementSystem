@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,6 +14,7 @@ namespace CenterManagement.Web.ViewModels.Student
         [Required(ErrorMessage = "Please select a target group.")]
         public int ToGroupId { get; set; }
 
+        [ValidateNever]
         public SelectList AvailableGroupsSelectList { get; set; } = null!;
     }
 }
