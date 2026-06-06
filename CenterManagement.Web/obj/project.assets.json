@@ -4475,11 +4475,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Web\\CenterManagement.Web.csproj",
+      "projectUniqueName": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Web\\CenterManagement.Web.csproj",
       "projectName": "CenterManagement.Web",
-      "projectPath": "d:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Web\\CenterManagement.Web.csproj",
+      "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Web\\CenterManagement.Web.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "d:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Web\\obj\\",
+      "outputPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4501,14 +4501,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "d:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj": {
-              "projectPath": "d:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj"
+            "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj": {
+              "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj"
             },
-            "d:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj": {
-              "projectPath": "d:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj"
+            "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj": {
+              "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj"
             },
-            "d:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj": {
-              "projectPath": "d:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj"
+            "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj": {
+              "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj"
             }
           }
         }

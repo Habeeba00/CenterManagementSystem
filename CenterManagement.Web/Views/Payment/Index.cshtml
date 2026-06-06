@@ -289,6 +289,17 @@
                 renderPagination(data.totalPages, page, data.totalCount);
             } catch (e) {
                 console.error('Failed to fetch transactions', e);
+                const tbody = document.getElementById('tx-tbody');
+                if (tbody) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <span class="material-symbols-outlined text-error text-4xl mb-2 block">error</span>
+                                <p class="text-headline-sm font-headline-sm text-error">Failed to load data</p>
+                                <p class="text-body-sm text-outline">Please try again later.</p>
+                            </td>
+                        </tr>`;
+                }
             }
         }
 
@@ -555,7 +566,6 @@
                     notes: notes || null
                 };
 
-            try {
                 const res = await fetch('/Payment/RecordCourse', {
                     method: 'POST',
                     headers: {
