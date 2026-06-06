@@ -33,9 +33,9 @@ public class AttendanceService : IAttendanceService
         var scanTimeOfDay = scanTime.TimeOfDay;
         var scanDate = scanTime.Date;
         var graceMinutes = 30;
-        // Pre-compute: instead of s.EndTime.Add(grace) >= scanTime (untranslatable),
-        // use s.EndTime >= scanTime - grace (simple comparison, EF-safe).
-        var adjustedScanTime = scanTimeOfDay.Subtract(TimeSpan.FromMinutes(graceMinutes));
+        var earlyGraceMinutes = 30; // 30 minutes before start
+        var adjustedScanTimeForEnd = scanTimeOfDay.Subtract(TimeSpan.FromMinutes(graceMinutes));
+        var adjustedScanTimeForStart = scanTimeOfDay.Add(TimeSpan.FromMinutes(earlyGraceMinutes));
 
         return await _db.Enrollments
             .Where(e =>
@@ -47,8 +47,8 @@ public class AttendanceService : IAttendanceService
                 !s.IsDeleted &&
                 !s.IsCanceled &&
                 s.SessionDate.Date == scanDate &&
-                s.StartTime <= scanTimeOfDay &&
-                s.EndTime >= adjustedScanTime)
+                s.StartTime <= adjustedScanTimeForStart &&
+                s.EndTime >= adjustedScanTimeForEnd)
             .OrderByDescending(s => s.StartTime)
             .FirstOrDefaultAsync();
     }
@@ -58,7 +58,9 @@ public class AttendanceService : IAttendanceService
         var scanTimeOfDay = scanTime.TimeOfDay;
         var scanDate = scanTime.Date;
         var graceMinutes = 30;
-        var adjustedScanTime = scanTimeOfDay.Subtract(TimeSpan.FromMinutes(graceMinutes));
+        var earlyGraceMinutes = 30; // 30 minutes before start
+        var adjustedScanTimeForEnd = scanTimeOfDay.Subtract(TimeSpan.FromMinutes(graceMinutes));
+        var adjustedScanTimeForStart = scanTimeOfDay.Add(TimeSpan.FromMinutes(earlyGraceMinutes));
 
         return await _db.Sessions
             .Include(s => s.Group)
@@ -67,8 +69,8 @@ public class AttendanceService : IAttendanceService
                 !s.IsDeleted &&
                 !s.IsCanceled &&
                 s.SessionDate.Date == scanDate &&
-                s.StartTime <= scanTimeOfDay &&
-                s.EndTime >= adjustedScanTime)
+                s.StartTime <= adjustedScanTimeForStart &&
+                s.EndTime >= adjustedScanTimeForEnd)
             .OrderByDescending(s => s.StartTime)
             .FirstOrDefaultAsync();
     }
@@ -292,6 +294,7 @@ public class AttendanceService : IAttendanceService
     public async Task<PagedResult<AttendanceListItemDto>> GetSessionAttendanceListAsync(int sessionId, int page, int pageSize, string? search)
     {
         var query = _db.StudentAttendances
+            .IgnoreQueryFilters()
             .Include(a => a.StudentProfile).ThenInclude(sp => sp.User)
             .Where(a => a.SessionId == sessionId && !a.IsDeleted);
 

@@ -89,6 +89,7 @@ namespace CenterManagement.Application.Services
                         EnrollmentDate = DateTime.UtcNow
                     });
                 }
+
                 await _db.SaveChangesAsync();
 
                 // 6. Commit transaction
@@ -385,6 +386,10 @@ namespace CenterManagement.Application.Services
                 ?? throw new InvalidOperationException(
                     $"No active enrollment found for student {studentProfileId} in group {fromGroupId}.");
 
+            var targetGroup = await _db.Groups.FirstOrDefaultAsync(g => g.Id == toGroupId);
+            if (targetGroup == null) throw new InvalidOperationException("Target group not found or is deleted.");
+            if (!targetGroup.IsActive) throw new InvalidOperationException("Target group is inactive.");
+
             // 2. Check no existing active enrollment in toGroup
             var existingActive = await _db.Enrollments
                 .AnyAsync(e =>
@@ -429,6 +434,10 @@ namespace CenterManagement.Application.Services
 
         public async Task AddToGroupAsync(int studentProfileId, int groupId, string adminId)
         {
+            var targetGroup = await _db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+            if (targetGroup == null) throw new InvalidOperationException("Target group not found or is deleted.");
+            if (!targetGroup.IsActive) throw new InvalidOperationException("Target group is inactive.");
+
             // Check if enrollment already exists (active or not)
             var existing = await _db.Enrollments
                 .IgnoreQueryFilters()

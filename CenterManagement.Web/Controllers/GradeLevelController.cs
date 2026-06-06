@@ -85,6 +85,13 @@ namespace CenterManagement.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var hasCourses = await _context.Courses.AnyAsync(c => c.GradeLevelId == id);
+            if (hasCourses)
+            {
+                TempData["Error"] = "Cannot delete this grade level because it is linked to one or more active courses.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var gradeLevel = await _context.GradeLevels.FindAsync(id);
             if (gradeLevel != null)
             {

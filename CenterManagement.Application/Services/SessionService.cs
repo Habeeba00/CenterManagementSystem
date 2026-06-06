@@ -34,7 +34,7 @@ namespace CenterManagement.Application.Services
         public async Task<int> CreateSessionAsync(CreateSessionDto dto, string adminId)
         {
             // 1. Session date cannot be in the past
-            if (dto.SessionDate.Date < DateTime.UtcNow.Date)
+            if (dto.SessionDate.Date < DateTime.Now.Date)
                 throw new InvalidOperationException("Session date cannot be in the past");
 
             // 2. Start time must be before end time

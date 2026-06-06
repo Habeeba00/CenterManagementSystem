@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gKn+MSSoJzc=",
+  "dgSpecHash": "IPvWYhxkN8E=",
   "success": true,
-  "projectFilePath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj",
+  "projectFilePath": "d:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

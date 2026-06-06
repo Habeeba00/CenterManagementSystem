@@ -193,6 +193,7 @@ namespace CenterManagement.Application.Services
             int studentProfileId)
         {
             var student = await _db.StudentProfiles
+                .IgnoreQueryFilters()
                 .Include(s => s.User)
                 .Include(s => s.CoursePayments)
                     .ThenInclude(cp => cp.Course)
@@ -228,6 +229,20 @@ namespace CenterManagement.Application.Services
                 })
                 .ToList();
 
+            var unbilledEnrollments = await _db.Enrollments
+                .Include(e => e.Group).ThenInclude(g => g.Course)
+                .Where(e => e.StudentProfileId == studentProfileId && e.IsActive)
+                .Where(e => !_db.StudentCoursePayments.Any(cp => cp.StudentProfileId == studentProfileId && cp.CourseId == e.Group.CourseId))
+                .Select(e => new UnbilledEnrollmentDto
+                {
+                    EnrollmentId = e.Id,
+                    CourseId = e.Group.CourseId,
+                    CourseName = e.Group.Course.Name,
+                    Price = e.Group.Course.Price
+                })
+                .Distinct()
+                .ToListAsync();
+
             var totalRequired = coursePayments.Sum(cp => cp.RequiredAmount);
             var totalPaid = coursePayments.Sum(cp => cp.PaidAmount);
 
@@ -240,7 +255,8 @@ namespace CenterManagement.Application.Services
                 TotalRemaining = totalRequired - totalPaid,
                 IsFullyPaid = coursePayments.All(cp => cp.IsPaid),
                 CoursePayments = coursePayments,
-                SessionPayments = sessionPayments
+                SessionPayments = sessionPayments,
+                UnbilledEnrollments = unbilledEnrollments
             };
         }
 
@@ -252,6 +268,7 @@ namespace CenterManagement.Application.Services
             TransactionFilter filter)
         {
             var query = _db.PaymentTransactions
+                .IgnoreQueryFilters()
                 .Include(t => t.StudentCoursePayment)
                     .ThenInclude(scp => scp.StudentProfile)
                         .ThenInclude(sp => sp.User)

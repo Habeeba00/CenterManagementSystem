@@ -85,6 +85,13 @@ namespace CenterManagement.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var hasCourses = await _context.Courses.AnyAsync(c => c.SubjectId == id);
+            if (hasCourses)
+            {
+                TempData["Error"] = "Cannot delete this subject because it is linked to one or more active courses.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var subject = await _context.Subjects.FindAsync(id);
             if (subject != null)
             {

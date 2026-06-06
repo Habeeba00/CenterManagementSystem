@@ -1,4 +1,4 @@
-﻿using CenterManagement.Domain.Common;
+using CenterManagement.Domain.Common;
 
 namespace CenterManagement.Domain.Entities
 {
@@ -10,11 +10,11 @@ namespace CenterManagement.Domain.Entities
 
         public int SubjectId { get; set; }
 
-        public Subject Subject { get; set; } = new Subject();
+        public Subject Subject { get; set; } = null!;
 
         public int GradeLevelId { get; set; }
 
-        public GradeLevel GradeLevel { get; set; } = new GradeLevel();
+        public GradeLevel GradeLevel { get; set; } = null!;
 
         public ICollection<Group> Groups
         { get; set; } = new List<Group>();

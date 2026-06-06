@@ -12,5 +12,6 @@ namespace CenterManagement.Application.DTOs.Payment
         public bool IsFullyPaid { get; set; }
         public List<StudentCoursePaymentSummaryDto> CoursePayments { get; set; } = new();
         public List<SessionPaymentDto> SessionPayments { get; set; } = new();
+        public List<UnbilledEnrollmentDto> UnbilledEnrollments { get; set; } = new();
     }
 }

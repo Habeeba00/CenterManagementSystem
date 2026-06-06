@@ -17,8 +17,8 @@ namespace CenterManagement.Application.Services
 
         public async Task<DashboardKpiDto> GetReceptionistKpisAsync()
         {
-            var today = DateTime.UtcNow.Date;
-            var nowTime = DateTime.UtcNow.TimeOfDay;
+            var today = DateTime.Now.Date;
+            var nowTime = DateTime.Now.TimeOfDay;
             var monthStart = new DateTime(today.Year, today.Month, 1);
 
             var totalStudents = await _db.StudentProfiles.CountAsync();

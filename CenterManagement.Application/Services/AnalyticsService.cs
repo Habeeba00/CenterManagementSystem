@@ -103,6 +103,8 @@ namespace CenterManagement.Application.Services
                 return new List<SubjectRevenueDto>();
 
             return await _db.PaymentTransactions
+                .Include(t => t.StudentCoursePayment).ThenInclude(scp => scp.Course).ThenInclude(c => c.Subject)
+                .IgnoreQueryFilters()
                 .GroupBy(t => t.StudentCoursePayment.Course.Subject.Name)
                 .Select(g => new SubjectRevenueDto
                 {

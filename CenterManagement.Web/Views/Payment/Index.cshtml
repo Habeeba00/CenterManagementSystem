@@ -482,6 +482,16 @@
                 });
             }
 
+            if (summary.unbilledEnrollments && summary.unbilledEnrollments.length > 0) {
+                summary.unbilledEnrollments.forEach(ue => {
+                    const opt = document.createElement('option');
+                    opt.value = `unbilled_${ue.courseId}`;
+                    opt.textContent = `${ue.courseName} (Unbilled) — Price: ${ue.price.toFixed(2)}`;
+                    opt.dataset.remaining = ue.price;
+                    select.appendChild(opt);
+                });
+            }
+
             section.classList.remove('hidden');
 
             // Show balance info on selection change
@@ -501,11 +511,12 @@
         // Submit Payment
         // =========================================
         async function submitPayment() {
-            const scpId = document.getElementById('payment-scp-id').value;
+            let scpId = document.getElementById('payment-scp-id').value;
             const amount = document.getElementById('payment-amount').value;
             const method = document.getElementById('payment-method').value;
             const notes = document.getElementById('payment-notes').value;
             const errorEl = document.getElementById('payment-error');
+            const studentId = document.getElementById('selected-student-id').value;
 
             if (!scpId || !amount) {
                 errorEl.textContent = 'Please select a course and enter an amount.';
@@ -513,12 +524,36 @@
                 return;
             }
 
-            const payload = {
-                studentCoursePaymentId: parseInt(scpId),
-                amount: parseFloat(amount),
-                paymentMethod: method,
-                notes: notes || null
-            };
+            try {
+                // Intercept unbilled enrollments
+                if (scpId.startsWith('unbilled_')) {
+                    const courseId = scpId.split('_')[1];
+                    const createRes = await fetch('/Payment/CreateCourse', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': getAntiForgeryToken()
+                        },
+                        body: JSON.stringify({
+                            studentProfileId: parseInt(studentId),
+                            courseId: parseInt(courseId)
+                        })
+                    });
+                    const createData = await createRes.json();
+                    if (!createData.success) {
+                        errorEl.textContent = createData.error || 'Failed to initialize payment record.';
+                        errorEl.classList.remove('hidden');
+                        return;
+                    }
+                    scpId = createData.studentCoursePaymentId.toString();
+                }
+
+                const payload = {
+                    studentCoursePaymentId: parseInt(scpId),
+                    amount: parseFloat(amount),
+                    paymentMethod: method,
+                    notes: notes || null
+                };
 
             try {
                 const res = await fetch('/Payment/RecordCourse', {
