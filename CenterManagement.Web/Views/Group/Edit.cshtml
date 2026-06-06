@@ -19,7 +19,7 @@
         </div>
     }
 
-    <form asp-action="EditPost" method="post" class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+    <form asp-action="EditPost" asp-route-id="@ViewContext.RouteData.Values["id"]" method="post" class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
         @Html.AntiForgeryToken()
         
         <div class="p-8 space-y-4">

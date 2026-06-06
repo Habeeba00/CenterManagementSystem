@@ -51,7 +51,16 @@ namespace CenterManagement.Application.Services
 
             if (File.Exists(fullPath))
             {
-                File.Delete(fullPath);
+                try
+                {
+                    File.Delete(fullPath);
+                }
+                catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+                {
+                    // File is locked by another process (e.g., IIS static file handler).
+                    // Swallow the error — the orphaned file is harmless and the business
+                    // operation (photo replacement, profile update) must not be blocked.
+                }
             }
         }
     }

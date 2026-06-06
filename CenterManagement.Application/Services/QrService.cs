@@ -11,8 +11,15 @@ public class QrService : IQrService
 
     public string? DecodeQrCode(string qrCode)
     {
+        if (string.IsNullOrWhiteSpace(qrCode)) return null;
         try 
         { 
+            // Sanitize: restore '+' chars that scanners convert to spaces,
+            // and re-pad Base64 if trailing '=' was stripped.
+            qrCode = qrCode.Trim().Replace(" ", "+");
+            int mod4 = qrCode.Length % 4;
+            if (mod4 > 0) qrCode += new string('=', 4 - mod4);
+
             return Encoding.UTF8.GetString(Convert.FromBase64String(qrCode)); 
         }
         catch 
