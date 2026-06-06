@@ -34,7 +34,7 @@ namespace CenterManagement.Web.Controllers
             else
             {
                 // Default to showing sessions from a week ago to a month ahead if no filters
-                sessions = await _sessionService.GetSessionsByDateRangeAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow.AddDays(30));
+                sessions = await _sessionService.GetSessionsByDateRangeAsync(DateTime.Now.AddDays(-7), DateTime.Now.AddDays(30));
             }
 
             if (groupId.HasValue)

@@ -32,7 +32,10 @@ public class AttendanceService : IAttendanceService
     {
         var scanTimeOfDay = scanTime.TimeOfDay;
         var scanDate = scanTime.Date;
-        var graceWindow = TimeSpan.FromMinutes(30);
+        var graceMinutes = 30;
+        // Pre-compute: instead of s.EndTime.Add(grace) >= scanTime (untranslatable),
+        // use s.EndTime >= scanTime - grace (simple comparison, EF-safe).
+        var adjustedScanTime = scanTimeOfDay.Subtract(TimeSpan.FromMinutes(graceMinutes));
 
         return await _db.Enrollments
             .Where(e =>
@@ -45,7 +48,7 @@ public class AttendanceService : IAttendanceService
                 !s.IsCanceled &&
                 s.SessionDate.Date == scanDate &&
                 s.StartTime <= scanTimeOfDay &&
-                s.EndTime.Add(graceWindow) >= scanTimeOfDay)
+                s.EndTime >= adjustedScanTime)
             .OrderByDescending(s => s.StartTime)
             .FirstOrDefaultAsync();
     }
@@ -54,7 +57,8 @@ public class AttendanceService : IAttendanceService
     {
         var scanTimeOfDay = scanTime.TimeOfDay;
         var scanDate = scanTime.Date;
-        var graceWindow = TimeSpan.FromMinutes(30);
+        var graceMinutes = 30;
+        var adjustedScanTime = scanTimeOfDay.Subtract(TimeSpan.FromMinutes(graceMinutes));
 
         return await _db.Sessions
             .Include(s => s.Group)
@@ -64,7 +68,7 @@ public class AttendanceService : IAttendanceService
                 !s.IsCanceled &&
                 s.SessionDate.Date == scanDate &&
                 s.StartTime <= scanTimeOfDay &&
-                s.EndTime.Add(graceWindow) >= scanTimeOfDay)
+                s.EndTime >= adjustedScanTime)
             .OrderByDescending(s => s.StartTime)
             .FirstOrDefaultAsync();
     }

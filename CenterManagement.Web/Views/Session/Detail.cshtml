@@ -3,8 +3,8 @@
 @{
     ViewData["Title"] = "Session Details";
     var s = Model.SessionDetail;
-    var isPast = s.SessionDate.Date < DateTime.UtcNow.Date || (s.SessionDate.Date == DateTime.UtcNow.Date && s.EndTime < DateTime.UtcNow.TimeOfDay);
-    var isNow = !isPast && s.SessionDate.Date == DateTime.UtcNow.Date && s.StartTime <= DateTime.UtcNow.TimeOfDay && s.EndTime >= DateTime.UtcNow.TimeOfDay;
+    var isPast = s.SessionDate.Date < DateTime.Now.Date || (s.SessionDate.Date == DateTime.Now.Date && s.EndTime < DateTime.Now.TimeOfDay);
+    var isNow = !isPast && s.SessionDate.Date == DateTime.Now.Date && s.StartTime <= DateTime.Now.TimeOfDay && s.EndTime >= DateTime.Now.TimeOfDay;
 }
 
 <style>

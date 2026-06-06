@@ -73,8 +73,8 @@
                 {
                     @foreach (var s in Model)
                     {
-                        var isPast = s.SessionDate.Date < DateTime.UtcNow.Date || (s.SessionDate.Date == DateTime.UtcNow.Date && s.EndTime < DateTime.UtcNow.TimeOfDay);
-                        var isNow = !isPast && s.SessionDate.Date == DateTime.UtcNow.Date && s.StartTime <= DateTime.UtcNow.TimeOfDay && s.EndTime >= DateTime.UtcNow.TimeOfDay;
+                        var isPast = s.SessionDate.Date < DateTime.Now.Date || (s.SessionDate.Date == DateTime.Now.Date && s.EndTime < DateTime.Now.TimeOfDay);
+                        var isNow = !isPast && s.SessionDate.Date == DateTime.Now.Date && s.StartTime <= DateTime.Now.TimeOfDay && s.EndTime >= DateTime.Now.TimeOfDay;
                         
                         <tr class="hover:bg-surface-container transition-colors group @(s.IsCanceled ? "opacity-60 bg-surface-container-low" : "")">
                             <td class="px-6 py-4">
