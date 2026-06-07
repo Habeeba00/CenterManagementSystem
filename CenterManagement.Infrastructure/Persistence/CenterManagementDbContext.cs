@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace CenterManagement.Infrastructure.Persistence
 {
-    public class CenterManagementDbContext
+    public class CenterManagementDbContext 
         : IdentityDbContext<ApplicationUser>
     {
         public CenterManagementDbContext(
